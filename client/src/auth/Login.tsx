@@ -1,23 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SignInInputState, userSignInSchema } from "@/schema/userSchema";
 import { Label } from "@radix-ui/react-label";
 import { Separator } from "@radix-ui/react-separator";
 import { Loader2, LockKeyhole, Mail } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router";
-type Login={
-    email:string,
-    password:string
-}
+// type Login={
+//     email:string,
+//     password:string
+// }
 
 
 
 
 const Login = () => {
-  const [input, setInput] = useState<Login>({
+  const [input, setInput] = useState<SignInInputState>({
     email: "",
     password: "",
   });
+  const[error,setError]=useState<Partial<SignInInputState>>({})
   const loading = false;
   const changeEventHandler=(e:ChangeEvent<HTMLInputElement>)=>{
     const {name,value}=e.target
@@ -26,8 +28,20 @@ const Login = () => {
 
 const submitHandler=(e:FormEvent)=>{
     e.preventDefault()
+    //form validation
+
+    const result=userSignInSchema.safeParse(input)
+    
+    
+    if(!result.success){
+      const fieldErrors=result.error.formErrors.fieldErrors
+      setError(fieldErrors as Partial<SignInInputState>)
+     return 
+    }
+    
+    
 }
-console.log(input);
+
 
   return (
     <div className="flex items-center justify-center min-h-screen  ">
@@ -47,6 +61,7 @@ console.log(input);
               className="pl-10 focus-visible:ring-1"
             />
             <Mail className="absolute inset-y-8 left-2 pointer-events-none text-gray-500" />
+            {error&& <span className="text-sm text-red-700">{error?.email}</span>}
           </div>
         </div>
         <div className="mb-4">
@@ -61,6 +76,7 @@ console.log(input);
               className="pl-10 focus-visible:ring-1"
             />
             <LockKeyhole className="absolute inset-y-8 left-2 pointer-events-none text-gray-500" />
+            {error&& <span className="text-sm text-red-700">{error?.password}</span>}
           </div>
         </div>
         <div className="mb-10">
