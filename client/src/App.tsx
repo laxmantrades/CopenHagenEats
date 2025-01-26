@@ -8,6 +8,10 @@ import ResetPassword from "./auth/ResetPassword";
 import VerifyEmail from "./auth/VerifyEmail";
 import HeroSection from "./components/HeroSection";
 import Profile from "./components/Profile";
+import SearchPage from "./components/SearchPage";
+import ResturantDetail from "./components/ResturantDetails";
+import Cart from "./components/Cart";
+import Resturant from "./admin/Resturant";
 
 const appRouter = createBrowserRouter([
   {
@@ -18,10 +22,7 @@ const appRouter = createBrowserRouter([
         path: "/",
         element: <HeroSection/>,
       },
-      {
-        path: "/profile",
-        element: <Profile/>,
-      },
+     
       {
         path: "/login",
         element: <Login />,
@@ -41,7 +42,27 @@ const appRouter = createBrowserRouter([
       {
         path:"/verify-code",
         element:<VerifyEmail/>
-      }
+      },
+      {
+        path: "/profile",
+        element: <Profile/>,
+      },
+      {
+        path: "/search/:text",
+        element: <SearchPage/>,
+      },
+      {
+        path: "/resturant/:text",
+        element: <ResturantDetail/>,
+      },
+      {
+        path: "/cart",
+        element: <Cart/>,
+      },
+      {
+        path: "/admin/resturant",
+        element: <Resturant/>,
+      },
     ],
   },
 ]);
