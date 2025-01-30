@@ -13,9 +13,11 @@ import { MenuFormType, menuSchema } from "@/schema/menuSchema";
 
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
+import EditMenu from "./EditMenu";
 
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
   const [input, setInput] = useState<MenuFormType>({
     name: "",
     description: "",
@@ -170,6 +172,7 @@ const AddMenu = () => {
           </div>
         </div>
       ))}
+      <EditMenu ope/>
     </div>
   );
 };
