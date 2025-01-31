@@ -18,6 +18,7 @@ import EditMenu from "./EditMenu";
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
+  const [selectedMenu, setSelectedMenu] = useState<any>();
   const [input, setInput] = useState<MenuFormType>({
     name: "",
     description: "",
@@ -47,7 +48,7 @@ const AddMenu = () => {
           Available Menu
         </h1>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button className="bg-orange-500 hover:bg-orange-500">
               <Plus className="mr-2" /> Add Menus
             </Button>
@@ -130,6 +131,7 @@ const AddMenu = () => {
               <DialogFooter className="mt-5">
                 {loading ? (
                   <Button
+
                     disabled
                     className="bg-orange-500 hover:bg-orange-500"
                   >
@@ -166,13 +168,16 @@ const AddMenu = () => {
             <Button
               size={"sm"}
               className="bg-orange-500 hover:bg-orange-500 mt-2"
+              onClick={() => {
+                setSelectedMenu(id);
+                setEditOpen(true)}}
             >
               Edit
             </Button>
           </div>
         </div>
       ))}
-      <EditMenu ope/>
+      <EditMenu selectedMenu={selectedMenu} editOpen={editOpen} setEditOpen={setEditOpen}/>
     </div>
   );
 };
