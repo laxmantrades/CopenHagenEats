@@ -4,7 +4,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { HandPlatter, Loader2, Menu, Moon, Package2Icon, PackageCheck, ShoppingCart, SquareMenu, Sun, User, UtensilsCrossed } from "lucide-react";
+import {
+  HandPlatter,
+  Loader2,
+  Menu,
+  Moon,
+  
+  PackageCheck,
+  ShoppingCart,
+  SquareMenu,
+  Sun,
+  User,
+  UtensilsCrossed,
+} from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "./ui/button";
 import {
@@ -25,8 +37,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "./ui/input";
-import { Label } from "@radix-ui/react-label";
+
+
 import { Separator } from "./ui/separator";
 
 const NavBar = () => {
@@ -124,7 +136,6 @@ const NavBar = () => {
 export default NavBar;
 
 const MobileNavbar = () => {
-    
   return (
     <div>
       <Sheet>
@@ -167,18 +178,18 @@ const MobileNavbar = () => {
               to={""}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
-              <HandPlatter/>
+              <HandPlatter />
               <span>Order</span>
             </Link>
             <Link
               to={"/cart"}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
-              <ShoppingCart/>
-               <span> Cart(0)</span>
+              <ShoppingCart />
+              <span> Cart(0)</span>
             </Link>
             <Link
-              to={""}
+              to={"/admin/menu"}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
               <SquareMenu />
@@ -198,25 +209,22 @@ const MobileNavbar = () => {
               <PackageCheck />
               <span>Resturant Orders</span>
             </Link>
-            
           </SheetDescription>
           <SheetFooter className="flex flex-col gap-5">
-          <div>
-                    <Avatar className="flex gap-5">
-                        <AvatarImage></AvatarImage>
-                        <AvatarFallback>CN</AvatarFallback>
-                        <h1 className="font-bold text-2xl">Laxman Giri</h1>
-                    </Avatar>
-                </div>
+            <div>
+              <Avatar className="flex gap-5">
+                <AvatarImage></AvatarImage>
+                <AvatarFallback>CN</AvatarFallback>
+                <h1 className="font-bold text-2xl">Laxman Giri</h1>
+              </Avatar>
+            </div>
             <SheetClose asChild>
-               
-            <Button
+              <Button
                 className="bg-orange-500 hover:bg-orange-500"
                 type="submit"
               >
                 Logout
               </Button>
-              
             </SheetClose>
           </SheetFooter>
         </SheetContent>
