@@ -1,10 +1,10 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Model, Types } from "mongoose";
 export interface Iuser {
   fullname: string;
   email: string;
   password: string;
   contact: number;
-  address:string
+  address: string;
   city: string;
   country: string;
   profilePicture: string;
@@ -16,13 +16,14 @@ export interface Iuser {
   verificationToken?: string;
   verificationTokenExpiresAt?: Date;
 }
-export  interface IUserDocument extends Iuser,Document{
-    createdAt:Date,
-    updatedAt:Date,
-    _id:mongoose.Schema.Types.ObjectId
+export interface IUserDocument extends Document<Types.ObjectId>, Iuser  {
+  createdAt: Date;
+  updatedAt: Date;
+  
 }
 const userScheam = new mongoose.Schema<IUserDocument>(
   {
+    _id:{ type:mongoose.Schema.Types.ObjectId},
     fullname: {
       type: String,
       required: true,
@@ -77,4 +78,7 @@ const userScheam = new mongoose.Schema<IUserDocument>(
   }
 );
 
-export const User = mongoose.model("User", userScheam);
+export const User: Model<IUserDocument> = mongoose.model<IUserDocument>(
+  "User",
+  userScheam
+);
