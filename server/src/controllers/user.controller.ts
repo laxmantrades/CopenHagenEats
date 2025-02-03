@@ -1,18 +1,24 @@
-import {  RequestHandler} from "express";
+import { RequestHandler } from "express";
 import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
-import crypto from "crypto"
+import crypto from "crypto";
 import { generateCookie } from "../utils/generateCookie";
+import cloudinary from "../utils/cloudinary";
+import { generateVerificationCode } from "../utils/generateVerificationCode";
+import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+
 export const signup: RequestHandler = async (req, res, next) => {
   try {
     const { fullname, email, password, contact } = req.body;
     let user = await User.findOne({ email });
     if (user) {
       res.status(400).json({ success: false, message: "User already exists" });
-      return
+      return;
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = "sdfdfdnjfgfjkhgfjkh";
+    const verificationToken = generateVerificationCode();
+   
+    
 
     user = new User({
       fullname,
@@ -23,8 +29,9 @@ export const signup: RequestHandler = async (req, res, next) => {
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
     });
     await user.save();
-    
-    generateCookie(res,user)
+
+    generateCookie(res, user);
+    await sendVerificationEmail(email,verificationToken)
     res.status(201).json({
       success: true,
       message: "Account Created Successfully",
@@ -52,7 +59,9 @@ export const login: RequestHandler = async (req, res, next) => {
         message: "Incorrect Email or Password",
       });
     }
-
+    generateCookie(res, user);
+    
+    
     user.lastLogin = new Date();
     const savedUser = await user.save();
     const { password: _, ...userWithoutpassword } = savedUser.toObject();
@@ -85,7 +94,7 @@ export const verifyEmail: RequestHandler = async (req, res, next) => {
     await user.save();
 
     //send welcome email
-    //await sendWelcomeEmail(user.email,user.fullname)
+    await sendWelcomeEmail(user.email,user.fullname)
     res.status(200).json({
       success: true,
       message: "Email verified Succesfully",
@@ -105,98 +114,117 @@ export const logout: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-export const forgotPassword:RequestHandler=async(req,res,next)=>{
-    try {
-       const{email}=req.body
-       const user=await User.findOne({email})
-       if(!user){
-        res.status(400).json({
-            success:false,
-            message:"Inavlid Email "
-        })
-     return
-
-       }
-       const resetToken=crypto.randomBytes(40).toString("hex")
-        const resetTokenExpiresAt=new Date(Date.now()+1*60*60*1000)
-        user.resetPasswordToken=resetToken,
-        user.resetPasswordTokenExpiresAt=resetTokenExpiresAt
-        await user.save()
-
-        //sendemail
-      //  await sendPasswordResetEmail(user.email,`${process.env.FRONTEND_URL}/resetpassword${token}`)
-
-
-
-        res.status(200).json({
-            success:true,
-            message:"Password reset link is sent to your email"
-        })
-
-
-
-    } catch (error) {
-       next(error) 
+export const forgotPassword: RequestHandler = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        message: "Inavlid Email ",
+      });
+      return;
     }
-}
-export const resetPassword:RequestHandler=async(req,res,next)=>{
-    try {
-        const {token}=req.params
-        const {newpassword}=req.body
-        const user=await User.findOne({resetPasswordToken:token,resetPasswordTokenExpiresAt:{$gt:Date.now()}})
-        if(!user){
-            res.status(400).json({
-                success:false,
-                message:"Invalid or expired token"
-            })
-            return
-        }
-        const hashedPassword=await bcrypt.hash(newpassword,10)
-        user.password=hashedPassword
-        user.resetPasswordToken=undefined,
-        user.resetPasswordTokenExpiresAt=undefined
-        await user.save()
+    const resetToken = crypto.randomBytes(40).toString("hex");
+    const resetTokenExpiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000);
+    (user.resetPasswordToken = resetToken),
+      (user.resetPasswordTokenExpiresAt = resetTokenExpiresAt);
+    await user.save();
 
-        //send success reset email
+    //sendemail
+      await sendPasswordResetEmail(user.email,`${process.env.FRONTEND_URL}/resetpassword${resetToken}`)
 
-        res.status(200).json({
-            success:true,
-            message:"Password reset Successfully"
-        })
-    } catch (error) {
-       next(error) 
+    res.status(200).json({
+      success: true,
+      message: "Password reset link is sent to your email",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const resetPassword: RequestHandler = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { newpassword } = req.body;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordTokenExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid or expired token",
+      });
+      return;
     }
-}
-export const checkAuth:RequestHandler=async(req,res,next)=>{
-    try {
-        const userId=req.id
-        const user=await User.findById(userId).select("-password")
-        if(!user){
-             res.status(404).json({
-                success:false,
-                message:"User not found"
-            })
-            return
-        }
-   res.status(200).json({
-            success:true,
-            user
-        })
+    const hashedPassword = await bcrypt.hash(newpassword, 10);
+    user.password = hashedPassword;
+    (user.resetPasswordToken = undefined),
+      (user.resetPasswordTokenExpiresAt = undefined);
+    await user.save();
 
+    //send success reset email
+    await sendResetSuccessEmail(user.email);
 
-
-
-
-    } catch (error) {
-        next(error)
+    res.status(200).json({
+      success: true,
+      message: "Password reset Successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const checkAuth: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.id;
+    console.log(userId);
+    
+    if(!userId){
+      res.status(404).json({
+        success: false,
+        message: "Inavlid userId",
+      });
+      return
     }
-}
-export const updateProfile:RequestHandler=async(req,res,next)=>{
-    try {
-        const userId=req.id
-        const{firstname,email,address,city,country,profilepicture}=req.body
-        
-    } catch (error) {
-        next(error)
+    
+    
+
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
     }
-}
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    
+    next(error);
+  }
+};
+export const updateProfile: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = req.id;
+    const { firstname, email, address, city, country, profilepicture } =
+      req.body;
+    let cloudResponse: any;
+
+    cloudResponse = await cloudinary.uploader.upload(profilepicture);
+    const updatedData={firstname, email, address, city, country, profilepicture}
+    const user=await User.findByIdAndUpdate(userId,updatedData,{new:true}).select("-password")
+    res.status(200).json({
+      success:true,
+      user,
+      message:"Profile Updated Successfully"
+    })
+
+    res.send("hi");
+  } catch (error) {
+    next(error);
+  }
+};
