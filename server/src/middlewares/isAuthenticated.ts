@@ -11,7 +11,7 @@ declare global {
 
 export const isAuthenticated:RequestHandler=async(req,res,next)=>{
 try {
-    const token=req.cookies.token
+    const token=req.headers.authorization?.split(' ')[1]
     if(!token){
         res.status(401).json({
             success:false,
@@ -32,6 +32,8 @@ try {
     req.id=decode.userId
     next()
 } catch (error) {
+    console.log(error);
+    
     res.status(500).json({
         success:false,
         message:"Internal server error"
