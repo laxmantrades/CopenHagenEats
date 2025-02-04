@@ -5,7 +5,12 @@ import crypto from "crypto";
 import { generateCookie } from "../utils/generateCookie";
 import cloudinary from "../utils/cloudinary";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
-import { sendPasswordResetEmail, sendResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/email";
+import {
+  sendPasswordResetEmail,
+  sendResetSuccessEmail,
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} from "../mailtrap/email";
 
 export const signup: RequestHandler = async (req, res, next) => {
   try {
@@ -17,10 +22,8 @@ export const signup: RequestHandler = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateVerificationCode();
-   
-    
 
-    user = new User({
+    user = await User.create({
       fullname,
       email,
       password: hashedPassword,
@@ -28,16 +31,20 @@ export const signup: RequestHandler = async (req, res, next) => {
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
     });
-    await user.save();
 
-    generateCookie(res, user);
-    await sendVerificationEmail(email,verificationToken)
+     generateCookie(res, user);
+    await sendVerificationEmail(email, verificationToken);
+    const userWithoutPassword = await User.findOne({ email }).select(
+      "-password"
+    );
     res.status(201).json({
       success: true,
       message: "Account Created Successfully",
-      user,
+      userWithoutPassword,
     });
   } catch (error) {
+    console.log(error);
+    
     next(error);
   }
 };
@@ -60,8 +67,7 @@ export const login: RequestHandler = async (req, res, next) => {
       });
     }
     generateCookie(res, user);
-    
-    
+
     user.lastLogin = new Date();
     const savedUser = await user.save();
     const { password: _, ...userWithoutpassword } = savedUser.toObject();
@@ -94,7 +100,7 @@ export const verifyEmail: RequestHandler = async (req, res, next) => {
     await user.save();
 
     //send welcome email
-    await sendWelcomeEmail(user.email,user.fullname)
+    await sendWelcomeEmail(user.email, user.fullname);
     res.status(200).json({
       success: true,
       message: "Email verified Succesfully",
@@ -132,7 +138,10 @@ export const forgotPassword: RequestHandler = async (req, res, next) => {
     await user.save();
 
     //sendemail
-      await sendPasswordResetEmail(user.email,`${process.env.FRONTEND_URL}/resetpassword${resetToken}`)
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.FRONTEND_URL}/resetpassword${resetToken}`
+    );
 
     res.status(200).json({
       success: true,
@@ -178,16 +187,14 @@ export const checkAuth: RequestHandler = async (req, res, next) => {
   try {
     const userId = req.id;
     console.log(userId);
-    
-    if(!userId){
+
+    if (!userId) {
       res.status(404).json({
         success: false,
         message: "Inavlid userId",
       });
-      return
+      return;
     }
-    
-    
 
     const user = await User.findById(userId).select("-password");
     if (!user) {
@@ -203,7 +210,7 @@ export const checkAuth: RequestHandler = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    
+
     next(error);
   }
 };
@@ -215,13 +222,22 @@ export const updateProfile: RequestHandler = async (req, res, next) => {
     let cloudResponse: any;
 
     cloudResponse = await cloudinary.uploader.upload(profilepicture);
-    const updatedData={firstname, email, address, city, country, profilepicture}
-    const user=await User.findByIdAndUpdate(userId,updatedData,{new:true}).select("-password")
+    const updatedData = {
+      firstname,
+      email,
+      address,
+      city,
+      country,
+      profilepicture,
+    };
+    const user = await User.findByIdAndUpdate(userId, updatedData, {
+      new: true,
+    }).select("-password");
     res.status(200).json({
-      success:true,
+      success: true,
       user,
-      message:"Profile Updated Successfully"
-    })
+      message: "Profile Updated Successfully",
+    });
 
     res.send("hi");
   } catch (error) {
