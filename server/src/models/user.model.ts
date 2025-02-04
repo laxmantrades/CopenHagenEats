@@ -16,14 +16,14 @@ export interface Iuser {
   verificationToken?: string;
   verificationTokenExpiresAt?: Date;
 }
-export interface IUserDocument extends Document<Types.ObjectId>, Iuser  {
+export interface IUserDocument extends Iuser, Document  {
   createdAt: Date;
   updatedAt: Date;
   
 }
 const userScheam = new mongoose.Schema<IUserDocument>(
   {
-    _id:{ type:mongoose.Schema.Types.ObjectId},
+    
     fullname: {
       type: String,
       required: true,
