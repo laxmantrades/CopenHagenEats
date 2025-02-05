@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 export interface IMenu{
     //_id:mongoose.Schema.Types.ObjectId,
     name:string,
-    descriptin:string,
+    description:string,
     price:number,
     image:string
 }
@@ -18,7 +18,7 @@ const menuSchema=new mongoose.Schema<IMenuDocument>({
                 type:String,
                 required:true
             },
-            descriptin:{
+            description:{
                 type:String,
                 required:true
             },
