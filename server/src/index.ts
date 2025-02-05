@@ -6,6 +6,8 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cookieParser from "cookie-parser"
 import bodyParser from "body-parser"
 import cors from "cors"
+import resturantRouter from "./routes/resturant.route";
+import menuRouter from "./routes/menu.route";
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(express.urlencoded({extended:true,limit:"10mb"}))
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/v1/user",userRouter )
+app.use("/api/v1/resturant",resturantRouter)
+app.use("api/v1/menu",menuRouter)
 app.use(errorHandler)
 
 const corsOptions={
