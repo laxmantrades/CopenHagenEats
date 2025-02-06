@@ -8,6 +8,7 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import resturantRouter from "./routes/resturant.route";
 import menuRouter from "./routes/menu.route";
+import orderRoute from "./routes/order.route";
 
 dotenv.config();
 
@@ -23,7 +24,9 @@ app.use(cookieParser())
 app.use("/api/v1/user",userRouter )
 app.use("/api/v1/resturant",resturantRouter)
 app.use("api/v1/menu",menuRouter)
+app.use("api/v1/order",orderRoute)
 app.use(errorHandler)
+
 
 const corsOptions={
   origin:process.env.FRONTEND_URL,
