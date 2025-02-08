@@ -40,10 +40,14 @@ import {
 
 
 import { Separator } from "./ui/separator";
+import { useUserStore } from "@/store/useUserStore";
 
 const NavBar = () => {
-  const admin = true;
-  const loading = false;
+ 
+  const {logout,loading,user}=useUserStore()
+  const logoutHandler=async()=>{
+    await logout()
+  }
   return (
     <div className="max-w-7xl mx-auto">
       <div className="h-14 flex  items-center justify-between ">
@@ -55,7 +59,7 @@ const NavBar = () => {
             <Link to={""}>Order</Link>
             <Link to={""}></Link>
           </div>
-          {admin && (
+          {user?.admin && (
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger>Dashboard</MenubarTrigger>
@@ -117,7 +121,7 @@ const NavBar = () => {
                     Please wait
                   </Button>
                 ) : (
-                  <Button className="bg-orange-500  hover:bg-orange-500">
+                  <Button onClick={logoutHandler} className="bg-orange-500  hover:bg-orange-500">
                     Logout
                   </Button>
                 )}
@@ -127,7 +131,7 @@ const NavBar = () => {
         </div>
         <div className="md:hidden lg:hidden">
           {/* Mobile responsive <MobileNavbar /> */}
-          <MobileNavbar />
+          <MobileNavbar logoutHandler={logoutHandler}/>
         </div>
       </div>
     </div>
@@ -135,7 +139,12 @@ const NavBar = () => {
 };
 export default NavBar;
 
-const MobileNavbar = () => {
+
+
+ type Props={
+  logoutHandler:()=>Promise<void>
+}
+const MobileNavbar:React.FC<Props> = ({logoutHandler}) => {
   return (
     <div>
       <Sheet>
@@ -220,6 +229,7 @@ const MobileNavbar = () => {
             </div>
             <SheetClose asChild>
               <Button
+              onClick={logoutHandler}
                 className="bg-orange-500 hover:bg-orange-500"
                 type="submit"
               >
