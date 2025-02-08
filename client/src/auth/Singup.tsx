@@ -29,7 +29,7 @@ const Signup = () => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
-  const submitHandler = async (e: FormEvent) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //formvalidation
     const result = userSignupSchema.safeParse(input);
@@ -112,8 +112,8 @@ const Signup = () => {
               value={input.contact}
               onChange={changeInputHandler}
               name="contact"
-              type="Contact"
-              placeholder="Enter your password"
+              type="number"
+              placeholder="Enter your contact"
               className="pl-10 focus-visible:ring-1"
             />
             <PhoneOutgoing className="absolute inset-y-8 left-2 pointer-events-none text-gray-500" />
