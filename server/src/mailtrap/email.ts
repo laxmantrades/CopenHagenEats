@@ -1,4 +1,9 @@
-import { generatePasswordResetEmailHtml, generateResetSuccessEmailHtml, generateWelcomeEmailHtml, htmlContent } from "./htmlEmail";
+import {
+  generatePasswordResetEmailHtml,
+  generateResetSuccessEmailHtml,
+  generateWelcomeEmailHtml,
+  htmlContent,
+} from "./htmlEmail";
 import { client, sender } from "./mailtrap";
 
 export const sendVerificationEmail = async (
@@ -11,7 +16,7 @@ export const sendVerificationEmail = async (
       from: sender,
       to: recipients,
       subject: "Verify your email",
-      html:htmlContent.replace("{verificationToken}",verificationToken),
+      html: htmlContent.replace("{verificationToken}", verificationToken),
       category: "Email Verification",
     });
   } catch (error) {
@@ -22,13 +27,13 @@ export const sendVerificationEmail = async (
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
   const recipients = [{ email }];
-  const htmlContent=generateWelcomeEmailHtml(name)
+  const htmlContent = generateWelcomeEmailHtml(name);
   try {
     const res = await client.send({
       from: sender,
       to: recipients,
       subject: "Welcome to Copenhagen Eats",
-      html:htmlContent,
+      html: htmlContent,
       category: "Welcome Message",
       template_variables: {
         company_info_name: "Copenhagen Eats",
@@ -46,15 +51,14 @@ export const sendPasswordResetEmail = async (
   resetURL: string
 ) => {
   const recipients = [{ email }];
-  const htmlContent=generatePasswordResetEmailHtml(resetURL)
+  const htmlContent = generatePasswordResetEmailHtml(resetURL);
   try {
     const res = await client.send({
       from: sender,
       to: recipients,
       subject: "Reset your email",
-      //html
+      html: htmlContent,
       category: "Reset Verification",
-      
     });
   } catch (error) {
     console.log(error);
@@ -62,19 +66,18 @@ export const sendPasswordResetEmail = async (
   }
 };
 
-export const sendResetSuccessEmail=async(email:string)=>{
-            const recipients=[{email}]
-            const htmlContent=generateResetSuccessEmailHtml()
-            try {
-                const res=await client.send({
-                    from:sender,
-                    to:recipients,
-                    subject:"Password Reset Successfully",
-                    html:htmlContent
-                })
-
-            } catch (error) {
-                console.log(error);
-                throw new Error("Failed to send reset success email")
-            }
-}
+export const sendResetSuccessEmail = async (email: string) => {
+  const recipients = [{ email }];
+  const htmlContent = generateResetSuccessEmailHtml();
+  try {
+    const res = await client.send({
+      from: sender,
+      to: recipients,
+      subject: "Password Reset Successfully",
+      html: htmlContent,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to send reset success email");
+  }
+};
