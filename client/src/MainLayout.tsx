@@ -9,12 +9,12 @@ const MainLayout = () => {
         <NavBar />
       </header>
       <div className="flex-1">
-        <Outlet/>
+        <Outlet />
       </div>
 
-      
-        <footer><Footer></Footer></footer>
-      
+      <footer>
+        <Footer></Footer>
+      </footer>
     </div>
   );
 };
