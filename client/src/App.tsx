@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import "./App.css";
 import Login from "./auth/Login";
 import MainLayout from "./MainLayout";
@@ -15,79 +15,158 @@ import Resturant from "./admin/Resturant";
 import AddMenu from "./admin/AddMenu";
 import Orders from "./admin/Orders";
 import Success from "./components/Success";
+import { useUserStore } from "./store/useUserStore";
+import { useEffect } from "react";
+import Loading from "./components/Loading";
+
+const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user, checkAuthentication, isCheckingAuth } =
+    useUserStore();
+  console.log(user?.isVerified);
+
+   if(isCheckingAuth){
+     return<h1>..Loading</h1>
+   }
+  if (!isAuthenticated) {
+    return <Navigate to={"/login"} replace />;
+  }
+  if (!user) {
+    checkAuthentication();
+  }
+
+  if (!user?.isVerified) {
+    return <Navigate to={"/verify-code"} replace />;
+  }
+
+  return children;
+};
+const AuthenticatedUser = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if (isAuthenticated && user?.isVerified) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
+const AdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, user } = useUserStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!user?.admin) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <ProtectedRoutes>
+        <MainLayout />
+      </ProtectedRoutes>
+    ),
     children: [
       {
         path: "/",
-        element: <HeroSection/>,
+        element: <HeroSection />,
       },
-     
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/signup",
-        element: <Signup />,
-      },
-      {
-        path:"/forgot-password",
-        element:<ForgotPassword/>
-      },
-      {
-        path:"/reset-password",
-        element:<ResetPassword/>
-      },
-      {
-        path:"/verify-code",
-        element:<VerifyEmail/>
-      },
+
       {
         path: "/profile",
-        element: <Profile/>,
+        element: <Profile />,
       },
       {
         path: "/search/:text",
-        element: <SearchPage/>,
+        element: <SearchPage />,
       },
       {
         path: "/resturant/:text",
-        element: <ResturantDetail/>,
+        element: <ResturantDetail />,
       },
       {
         path: "/cart",
-        element: <Cart/>,
+        element: <Cart />,
       },
       {
         path: "/admin/resturant",
-        element: <Resturant/>,
+        element: (
+          <AdminRoute>
+            <Resturant />
+          </AdminRoute>
+        ),
       },
       {
         path: "/admin/menu",
-        element: <AddMenu/>,
+        element: (
+          <AdminRoute>
+            <AddMenu />
+          </AdminRoute>
+        ),
       },
       {
         path: "/admin/orders",
-        element: <Orders/>,
+        element: (
+          <AdminRoute>
+            <Orders />
+          </AdminRoute>
+        ),
       },
       {
         path: "/admin/status",
-        element: <Success/>,
-      }
+        element: (
+          <AdminRoute>
+            <Success />
+          </AdminRoute>
+        ),
+      },
     ],
+  },
+  {
+    path: "/login",
+    element: (
+      <AuthenticatedUser>
+        <Login />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <AuthenticatedUser>
+        <Signup />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <AuthenticatedUser>
+        <ForgotPassword />
+      </AuthenticatedUser>
+    ),
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/verify-code",
+    element: <VerifyEmail />,
   },
 ]);
 function App() {
+  const { checkAuthentication, isCheckingAuth, user } = useUserStore();
+
+  useEffect(() => {
+    checkAuthentication();
+    console.log(user);
+  }, []);
+  if(isCheckingAuth) return <Loading/>
   return (
-    
-      <RouterProvider router={appRouter}>
-        
-      </RouterProvider>
-    
+    <main>
+      <RouterProvider router={appRouter}></RouterProvider>
+    </main>
   );
 }
 
