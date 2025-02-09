@@ -28,8 +28,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/resturant", resturantRouter);
-app.use("api/v1/menu", menuRouter);
-app.use("api/v1/order", orderRoute);
+app.use("/api/v1/menu", menuRouter);
+app.use("/api/v1/order", orderRoute);
 app.use(errorHandler);
 
 
