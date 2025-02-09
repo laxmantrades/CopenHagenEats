@@ -219,19 +219,25 @@ export const checkAuth: RequestHandler = async (req, res, next) => {
 export const updateProfile: RequestHandler = async (req, res, next) => {
   try {
     const userId = req.id;
-    const { firstname, email, address, city, country, profilepicture } =
+    const { fullname, email, address, city, country, profilePicture } =
       req.body;
     let cloudResponse: any;
+    if(profilePicture){
+      cloudResponse = await cloudinary.uploader.upload(profilePicture);
+    }
 
-    cloudResponse = await cloudinary.uploader.upload(profilepicture);
-    const updatedData = {
-      firstname,
+   
+    const updatedData:any = {
+      fullname,
       email,
       address,
       city,
       country,
-      profilepicture,
+     // profilePicture,
     };
+    if (cloudResponse) {
+      updatedData.profilePicture = cloudResponse.secure_url;
+    }
     const user = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
     }).select("-password");
@@ -241,7 +247,7 @@ export const updateProfile: RequestHandler = async (req, res, next) => {
       message: "Profile Updated Successfully",
     });
 
-    res.send("hi");
+   
   } catch (error) {
     next(error);
   }
