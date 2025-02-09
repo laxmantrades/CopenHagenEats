@@ -1,6 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
+import { useResturantStore } from "@/store/useResturantStore";
 
 export interface IFilterOptions {
   id: string;
@@ -15,18 +16,23 @@ const filterOptions: IFilterOptions[] = [
 ];
 
 const FilterPage = () => {
-  const appliedFilterHandler = (value: string) => {};
+  const { setAppliedFilter, appliedFilter, resetAppliedFilter } =
+    useResturantStore();
+  const appliedFilterHandler = (value: string) => {
+    setAppliedFilter(value);
+  };
   return (
     <div className="md:w-60">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl">Filter by cuisines</h1>
-        <Button variant="link">Reset</Button>
+        <Button onClick={resetAppliedFilter} variant="link">Reset</Button>
       </div>
       <div>
         {filterOptions.map((options) => (
           <div key={options.id} className="flex items-center space-x-2 my-5">
             <Checkbox
               className="p-0"
+              checked={appliedFilter?.includes(options.label)}
               id={options.id}
               onClick={() => appliedFilterHandler(options.label)}
             />
