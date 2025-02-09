@@ -22,7 +22,7 @@ import Loading from "./components/Loading";
 const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user, checkAuthentication, isCheckingAuth } =
     useUserStore();
-  console.log(user?.isVerified);
+
 
    if(isCheckingAuth){
      return<h1>..Loading</h1>
@@ -160,7 +160,7 @@ function App() {
 
   useEffect(() => {
     checkAuthentication();
-    console.log(user);
+   
   }, []);
   if(isCheckingAuth) return <Loading/>
   return (
