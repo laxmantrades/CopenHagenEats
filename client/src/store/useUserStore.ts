@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import axios from "axios";
 import { SignInInputState, SignupInputState } from "@/schema/userSchema";
 import { toast } from "sonner";
-type User = {
+export type User = {
   fullname: string;
   email: string;
   contact: number;
@@ -134,7 +134,7 @@ export const useUserStore = create<UserState>()(
             });
           }
         } catch (error: any) {
-          set({ isAuthenticated: false, isCheckingAuth: false ,user:null});
+          set({ isAuthenticated: false, isCheckingAuth: false, user: null });
           toast.error(error.data.response.message);
         }
       },
@@ -181,12 +181,17 @@ export const useUserStore = create<UserState>()(
           set({ loading: false });
         }
       },
-      updateProfile: async (updateData: any) => {
+      updateProfile: async (updatedData: any) => {
         try {
           set({ loading: true });
           const response = await axios.patch(
             `${API_END_POINT}/profile/update`,
-            { updateData }
+             updatedData ,
+            {
+              headers: {
+               
+              },
+            }
           );
           if (response.data.success) {
             toast.success(response.data.message);
@@ -202,7 +207,6 @@ export const useUserStore = create<UserState>()(
       name: "user-name",
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state) => {
-        console.log("State rehydrated:", state);
         if (state?.user) {
           state.isAuthenticated = true;
           state.isCheckingAuth = false;
