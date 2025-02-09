@@ -49,13 +49,13 @@ export const editMenu:RequestHandler=async(req,res,next)=>{
         const{id}=req.params
         const{name,description,price}=req.body
         const file=req.file
-        if(name.length===0||description===0||price.length===0){
-            res.status(400).json({
-                success:false,
-                message:"Input cannot be empty"
-            })
-            return
-        }
+        // if(name.length===0||description===0||price.length===0){
+        //     res.status(400).json({
+        //         success:false,
+        //         message:"Input cannot be empty"
+        //     })
+        //     return
+        // }
         const menu=await Menu.findById(id)
        if(!menu){
             res.status(404).json({
