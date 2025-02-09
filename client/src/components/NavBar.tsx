@@ -9,12 +9,12 @@ import {
   Loader2,
   Menu,
   Moon,
-  
+  User,
   PackageCheck,
   ShoppingCart,
   SquareMenu,
   Sun,
-  User,
+
   UtensilsCrossed,
 } from "lucide-react";
 import { Link } from "react-router";
@@ -40,11 +40,14 @@ import {
 
 
 import { Separator } from "./ui/separator";
-import { useUserStore } from "@/store/useUserStore";
+import {  useUserStore } from "@/store/useUserStore";
+import { useState } from "react";
 
 const NavBar = () => {
  
   const {logout,loading,user}=useUserStore()
+  const[isLoading,setIsLoading]=useState<boolean>(loading)
+
   const logoutHandler=async()=>{
     await logout()
   }
@@ -54,17 +57,17 @@ const NavBar = () => {
         <h1 className="text-2xl md:font-extrabold ">CopenHagen Eats</h1>
         <div className="hidden md:flex items-center space-x-3">
           <div className="flex space-x-5">
-            <Link to={""}>Home</Link>
-            <Link to={""}>Profile</Link>
-            <Link to={""}>Order</Link>
-            <Link to={""}></Link>
+            <Link to={"/"}>Home</Link>
+            <Link to={"/profile"}>Profile</Link>
+            <Link to={"/order"}>Order</Link>
+            
           </div>
           {user?.admin && (
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger>Dashboard</MenubarTrigger>
                 <MenubarContent>
-                  <Link to="/admin/restaurant">
+                  <Link to="/admin/resturant">
                     <MenubarItem>Restaurant</MenubarItem>
                   </Link>
                   <Link to="/admin/menu">
@@ -115,7 +118,7 @@ const NavBar = () => {
                 </Avatar>
               </div>
               <div>
-                {loading ? (
+                {isLoading? (
                   <Button className="bg-orange-500 hover:bg-orange-500">
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Please wait
@@ -131,7 +134,7 @@ const NavBar = () => {
         </div>
         <div className="md:hidden lg:hidden">
           {/* Mobile responsive <MobileNavbar /> */}
-          <MobileNavbar logoutHandler={logoutHandler}/>
+          <MobileNavbar />
         </div>
       </div>
     </div>
@@ -141,10 +144,9 @@ export default NavBar;
 
 
 
- type Props={
-  logoutHandler:()=>Promise<void>
-}
-const MobileNavbar:React.FC<Props> = ({logoutHandler}) => {
+ 
+const MobileNavbar = () => {
+  const{logout,user}=useUserStore()
   return (
     <div>
       <Sheet>
@@ -197,27 +199,27 @@ const MobileNavbar:React.FC<Props> = ({logoutHandler}) => {
               <ShoppingCart />
               <span> Cart(0)</span>
             </Link>
-            <Link
+            {user?.admin&&<Link
               to={"/admin/menu"}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
               <SquareMenu />
               <span>Menu</span>
-            </Link>
-            <Link
+            </Link>}
+           { user?.admin&&<Link
               to={"/admin/resturant"}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
               <UtensilsCrossed />
               <span>Resturant</span>
-            </Link>
-            <Link
+            </Link>}
+           { user?.admin&&<Link
               to={"/admin/orders"}
               className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-900"
             >
               <PackageCheck />
               <span>Resturant Orders</span>
-            </Link>
+            </Link>}
           </SheetDescription>
           <SheetFooter className="flex flex-col gap-5">
             <div>
@@ -229,7 +231,7 @@ const MobileNavbar:React.FC<Props> = ({logoutHandler}) => {
             </div>
             <SheetClose asChild>
               <Button
-              onClick={logoutHandler}
+              onClick={logout}
                 className="bg-orange-500 hover:bg-orange-500"
                 type="submit"
               >
