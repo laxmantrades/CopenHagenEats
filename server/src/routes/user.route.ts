@@ -12,7 +12,7 @@ userRouter.route("/logout").post(logout)
 userRouter.route("/verify-email").post(verifyEmail)
 userRouter.route("/forgot-password").post(forgotPassword)
 userRouter.route("/reset-password/:token").post(resetPassword),
-userRouter.route("profile/update").patch(isAuthenticated,updateProfile)
+userRouter.route("/profile/update").patch(isAuthenticated,updateProfile)
 
 
 export default userRouter;
