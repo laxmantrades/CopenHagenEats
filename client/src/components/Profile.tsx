@@ -4,10 +4,11 @@ import { useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import { useUserStore } from "@/store/useUserStore";
 type ProfileDataState = {
   fullname: string;
   email: string;
-  phone: string;
+  contact: string;
   address: string;
   city: string;
   country: string;
@@ -16,17 +17,18 @@ type ProfileDataState = {
 
 const Profile = () => {
   const imagreRef = useRef<HTMLInputElement | null>(null);
-  const loading=true
+
+  const{user,updateProfile,loading}=useUserStore()
   const [selectedprofilePicture, setSelectedProfilePicture] =
     useState<string>("");
   const [profilestate, setProfileData] = useState<ProfileDataState>({
-    fullname: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    country: "",
-    profilePicture: "",
+    fullname:user?.fullname|| "",
+    email: user?.email||"",
+    contact: "",
+    address:user?.address|| "",
+    city: user?.city||"",
+    country:user?.country|| "",
+    profilePicture: user?.profilePicture||"",
   });
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e?.target?.files?.[0];
@@ -47,20 +49,32 @@ const Profile = () => {
     setProfileData({ ...profilestate, [name]: value });
   };
 
-  const updateProfileHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const updateProfileHandler = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+
+      // const formData=new FormData()
+      // formData.append("firstname",profilestate.fullname)
+      // formData.append("lastname")
+      await updateProfile(profilestate)
+    } catch (error) {
+      console.log(error);
+      
+    }
+   
+
     
   };
   return (
-    <form className="max-w-7xl mx-auto my-5 ">
+    <form onSubmit={updateProfileHandler} className="max-w-7xl mx-auto my-5 ">
       <div className="flex items-center space-x-6">
         <div className="flex items-center gap-2">
           <Avatar className="relative md:w-28 md:h-28 w-20 h-20">
             <img
               className="rounded-full object-cover object-top w-20 h-20  md:h-28 md:w-28 "
-              src={selectedprofilePicture||"https://staticg.sportskeeda.com/editor/2024/05/d973a-17150616187538-1920.jpg"}
+              src={profilestate.profilePicture||"https://staticg.sportskeeda.com/editor/2024/05/d973a-17150616187538-1920.jpg"}
             />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback></AvatarFallback>
             <input
               ref={imagreRef}
               className="hidden"
@@ -140,7 +154,7 @@ const Profile = () => {
         
       </div>
       <div className="text-center mt-5">
-            {loading?<Button className="text-xl bg-orange-500 hover:orange-500">Update </Button>:<Button> <Loader2 className="animate-spin "/></Button>}
+            {!loading?<Button className="text-xl bg-orange-500 hover:orange-500">Update </Button>:<Button> <Loader2 className="animate-spin "/></Button>}
         </div>
     </form>
   );
