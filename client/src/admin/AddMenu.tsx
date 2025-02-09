@@ -14,6 +14,8 @@ import { MenuFormType, menuSchema } from "@/schema/menuSchema";
 import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import EditMenu from "./EditMenu";
+import { useMenuStore } from "@/store/useMenuStore";
+import { useResturantStore } from "@/store/useResturantStore";
 
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -25,12 +27,22 @@ const AddMenu = () => {
     price: 0,
     image: undefined,
   });
+const{loading,createMenu}=useMenuStore()
+const {resturant}=useResturantStore()
+
+
+
+
+
+
+
+
   const [error, setError] = useState<Partial<MenuFormType>>({});
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
     setInput({ ...input, [name]: type === "number" ? Number(value) : value });
   };
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = menuSchema.safeParse(input);
     if (!result.success) {
@@ -38,8 +50,22 @@ const AddMenu = () => {
       setError(fieldErrors as Partial<MenuFormType>);
       return;
     }
+    try {
+      const formData=new FormData()
+      formData.append("name",input.name)
+      formData.append("description",input.description)
+      formData.append("price",input.price.toString())
+      if(input.image){
+        formData.append("image",input.image)
+      }
+      await createMenu(formData)
+     
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
-  const loading = false;
+
 
   return (
     <div className="max-w-7xl mx-auto my-10">
@@ -148,28 +174,28 @@ const AddMenu = () => {
           </DialogContent>
         </Dialog>
       </div>
-      {Array.from({ length: 3 }).map((_, id) => (
+      {resturant.menu.map((menu:any, id:number) => (
         <div key={id} className="mt-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
             <img
-              src="https://media.istockphoto.com/id/1316145932/photo/table-top-view-of-spicy-food.jpg?s=612x612&w=0&k=20&c=eaKRSIAoRGHMibSfahMyQS6iFADyVy1pnPdy1O5rZ98="
+              src={menu?.image}
               alt=""
               className="md:h-24 md:w-24 h-16 w-full object-cover rounded-lg"
             />
             <div className="flex-1">
               <h1 className="text-lg font-semibold text-gray-800">
-                {"menu.name"}
+                {menu.name}
               </h1>
-              <p className="text-sm tex-gray-600 mt-1">{"menu.description"}</p>
+              <p className="text-sm tex-gray-600 mt-1">{menu.description}</p>
               <h2 className="text-md font-semibold mt-2">
-                Price: <span className="text-[#D19254]">80</span>
+                Price: <span className="text-[#D19254]">{menu?.price}</span>
               </h2>
             </div>
             <Button
               size={"sm"}
               className="bg-orange-500 hover:bg-orange-500 mt-2"
               onClick={() => {
-                setSelectedMenu(id);
+                setSelectedMenu(menu);
                 setEditOpen(true)}}
             >
               Edit
