@@ -41,12 +41,14 @@ import {
 
 import { Separator } from "./ui/separator";
 import {  useUserStore } from "@/store/useUserStore";
-import { useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
+
 
 const NavBar = () => {
  
   const {logout,loading,user}=useUserStore()
-  const[isLoading,setIsLoading]=useState<boolean>(loading)
+  const{cart}=useCartStore()
+  const isLoading:boolean=loading
 
   const logoutHandler=async()=>{
     await logout()
@@ -104,14 +106,14 @@ const NavBar = () => {
                   size={"icon"}
                   className="absolute -inset-y-3  left-2 text-xs rounded-full   h-2 w-2 p-2 bg-red-500 hover:bg-red-500"
                 >
-                  1
+                  {cart.length}
                 </Button>
               </Link>
               <div>
                 <Avatar>
                   <AvatarImage
                     className="h-10 w-10 rounded-full"
-                    src="https://github.com/shadcn.png"
+                    src={user?.profilePicture}
                     alt="profilephoto"
                   />
                   <AvatarFallback>CN</AvatarFallback>
@@ -224,7 +226,7 @@ const MobileNavbar = () => {
           <SheetFooter className="flex flex-col gap-5">
             <div>
               <Avatar className="flex gap-5">
-                <AvatarImage></AvatarImage>
+                <AvatarImage className="rounded-full h-10 w-10 object-fit" src={user?.profilePicture}></AvatarImage>
                 <AvatarFallback>CN</AvatarFallback>
                 <h1 className="font-bold text-2xl">Laxman Giri</h1>
               </Avatar>
