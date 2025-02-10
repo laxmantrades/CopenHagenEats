@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, } from "@radix-ui/react-avatar";
 import { Loader2, LocateIcon, Mail, MapPin, MapPinnedIcon, Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import { Input } from "./ui/input";
@@ -19,8 +19,8 @@ const Profile = () => {
   const imagreRef = useRef<HTMLInputElement | null>(null);
 
   const{user,updateProfile,loading}=useUserStore()
-  const [selectedprofilePicture, setSelectedProfilePicture] =
-    useState<string>("");
+  const[isLoading,setIsLoading]=useState<boolean>(loading)
+ 
   const [profilestate, setProfileData] = useState<ProfileDataState>({
     fullname:user?.fullname|| "",
     email: user?.email||"",
@@ -36,7 +36,7 @@ const Profile = () => {
       const reader=new FileReader()
       reader.onloadend=()=>{
         const result=reader.result as string
-        setSelectedProfilePicture(result)
+      
         setProfileData((prev)=>({
             ...prev,profilePicture:result
         }))
@@ -53,13 +53,14 @@ const Profile = () => {
     e.preventDefault();
     try {
 
-      // const formData=new FormData()
-      // formData.append("firstname",profilestate.fullname)
-      // formData.append("lastname")
+      
+      setIsLoading(true)
       await updateProfile(profilestate)
+      setIsLoading(false)
+  
     } catch (error) {
       console.log(error);
-      
+      setIsLoading(false)
     }
    
 
@@ -154,7 +155,7 @@ const Profile = () => {
         
       </div>
       <div className="text-center mt-5">
-            {!loading?<Button className="text-xl bg-orange-500 hover:orange-500">Update </Button>:<Button> <Loader2 className="animate-spin "/></Button>}
+            {!isLoading?<Button className="text-xl bg-orange-500 hover:orange-500">Update </Button>:<Button> <Loader2 className="animate-spin "/></Button>}
         </div>
     </form>
   );
