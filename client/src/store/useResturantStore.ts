@@ -14,7 +14,7 @@ export const useResturantStore = create<ResturantState>()(
       resturant: null,
       searchedResturant: null,
       appliedFilter: [],
-      //signleResturant: null,
+      signleResturant: null,
       //resturantOrder: [],
       createResturant: async (formData: FormData) => {
         try {
@@ -122,6 +122,19 @@ export const useResturantStore = create<ResturantState>()(
       },
       resetAppliedFilter:()=>{
         set({appliedFilter:[]})
+      },
+
+      getSingleResturant:async(resturantId:string)=>{
+        try {
+          const response=await axios.get(`${API_END_POINT}/${resturantId}`)
+          if(response.data.success){
+            
+            
+            set({signleResturant:response.data.restaurant})
+          }
+        } catch (error) {
+          
+        }
       }
 
 
