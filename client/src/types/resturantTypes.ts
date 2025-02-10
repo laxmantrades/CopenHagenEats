@@ -32,7 +32,7 @@ export type ResturantState = {
     resturant:Resturant| null;
     searchedResturant: searchedResturant|null;
     appliedFilter: [];
-    //signleResturant: null;
+    signleResturant: Resturant|null;
     //resturantOrder: Orders[];
     
     createResturant:(formData:FormData)=>Promise<void>;
@@ -43,6 +43,7 @@ export type ResturantState = {
     updatedMenuResturant:(updatedMenu:MenuItem)=>void;
     setAppliedFilter:(value:string)=>void;
     resetAppliedFilter:()=>void
+    getSingleResturant:(resturantId:string)=>void
   
   };
   
