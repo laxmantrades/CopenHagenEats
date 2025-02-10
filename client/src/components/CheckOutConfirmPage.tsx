@@ -11,6 +11,7 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useUserStore } from "@/store/useUserStore";
 
 const CheckOutConfirmPage = ({
   open,
@@ -19,13 +20,14 @@ const CheckOutConfirmPage = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const{user}=useUserStore()
   const [input, setInput] = useState({
-    fullname: "",
-    email: "",
-    contact: "",
-    address: "",
-    city: "",
-    country: "",
+    fullname:user?.fullname|| "",
+    email: user?.email|| "",
+    contact:  user?.contact||"",
+    address:user?.address|| "",
+    city: user?.city||"",
+    country:user?.country|| "",
   });
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
