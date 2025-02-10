@@ -183,7 +183,7 @@ export const useUserStore = create<UserState>()(
       },
       updateProfile: async (updatedData: any) => {
         try {
-          set({ loading: true });
+          
           const response = await axios.patch(
             `${API_END_POINT}/profile/update`,
              updatedData ,
@@ -195,11 +195,11 @@ export const useUserStore = create<UserState>()(
           );
           if (response.data.success) {
             toast.success(response.data.message);
-            set({ loading: false });
+            
           }
         } catch (error: any) {
           toast.error(error.response.data.message);
-          set({ loading: false });
+     
         }
       },
     }),
