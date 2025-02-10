@@ -182,7 +182,7 @@ export const getSingleRestaurant: RequestHandler = async (req, res, next) => {
   try {
     const restaurantId = req.params.id;
     const restaurant = await Resturant.findById(restaurantId).populate({
-      path: "menus",
+      path: "menu",
       options: { createdAt: -1 },
     });
     if (!restaurant) {
