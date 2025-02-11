@@ -1,5 +1,5 @@
 export type CheckoutSessionRequest={
-    cartItem:{
+    cartItems:{
         menuId:string,
         name:string,
         image:string,
@@ -26,6 +26,6 @@ export interface Orders extends CheckoutSessionRequest{
 export type OrderState={
     loading:boolean,
     orders:Orders[],
-    createCheckoutSession:()=>Promise<void>,
+    createCheckoutSession:(checkoutSessionRequest:CheckoutSessionRequest)=>Promise<void>,
     getOrderDetails:()=>Promise<void>
 }
