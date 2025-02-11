@@ -15,7 +15,7 @@ export const useResturantStore = create<ResturantState>()(
       searchedResturant: null,
       appliedFilter: [],
       signleResturant: null,
-      //resturantOrder: [],
+      resturantOrder: [],
       createResturant: async (formData: FormData) => {
         try {
           set({ loading: true });
@@ -135,6 +135,32 @@ export const useResturantStore = create<ResturantState>()(
         } catch (error) {
           
         }
+      },
+      getresturantOrder:async()=>{
+        try {
+          const response=await axios.get(`${API_END_POINT}/order`)
+          if(response.data.success){
+              set({resturantOrder:response.data.orders})
+          }
+        } catch (error) {
+          console.log(error);
+          
+        }
+      },
+      updateResturantOrder:async(orderId:string)=>{
+          try {
+            const response=await axios.put(`${API_END_POINT}/order/${orderId}/status`,{status},{
+              headers:{
+                "Content-Type":"application/json"
+              }
+            })
+            if(response.data.success){
+              const updateOrder= 
+            }
+            
+          } catch (error) {
+            
+          }
       }
 
 
