@@ -6,12 +6,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+ 
 } from "@/components/ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useUserStore } from "@/store/useUserStore";
+import { CheckoutSessionRequest } from "@/types/orderType";
+import { useCartStore } from "@/store/useCartStore";
+import { useResturantStore } from "@/store/useResturantStore";
+import { useOrderStore } from "@/store/useOrderStore";
+import { Loader2 } from "lucide-react";
 
 const CheckOutConfirmPage = ({
   open,
@@ -20,27 +25,46 @@ const CheckOutConfirmPage = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const{user}=useUserStore()
+  const { user } = useUserStore();
+  const { cart } = useCartStore();
+  const { resturant } = useResturantStore();
+  const {createCheckoutSession,loading}=useOrderStore()
   const [input, setInput] = useState({
-    fullname:user?.fullname|| "",
-    email: user?.email|| "",
-    contact:  user?.contact||"",
-    address:user?.address|| "",
-    city: user?.city||"",
-    country:user?.country|| "",
+    name: user?.fullname || "",
+    email: user?.email || "",
+    contact: user?.contact.toString() || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    country: user?.country || "",
   });
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
-  const checkOutHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const checkOutHandler =async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(input);
+    //
+    try {
+      const checkoutData: CheckoutSessionRequest = {
+        cartItems: cart.map((cartItem) => ({
+          menuId: cartItem._id,
+          name: cartItem.name,
+          image: cartItem.image,
+          price: cartItem.price.toString(),
+          quantity: cartItem.quantity.toString(),
+        })),
+        deliveryDetails: input,
+        resturantId: resturant?._id as string,
+      };
+      await createCheckoutSession(checkoutData)
+    } catch (error) {
+      console.log(error)
+    }
   };
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="mt-10">
@@ -57,7 +81,7 @@ const CheckOutConfirmPage = ({
               <div>
                 <Label>Fullname</Label>
                 <Input
-                  value={input.fullname}
+                  value={input.name}
                   name="fullname"
                   onChange={changeEventHandler}
                 />
@@ -99,10 +123,12 @@ const CheckOutConfirmPage = ({
                 />
               </div>
               <DialogFooter className="col-span-2 pt-5">
-                {" "}
-                <Button className="bg-blue-400 hover:bg-blue-400 w-full">
+                {loading?<Button disabled className="bg-blue-400 hover:bg-blue-400 w-full">
+                  <Loader2 className="mr-2 h-4 2-4 animate-spin"/> Please wait
+                </Button>:<Button className="bg-blue-400 hover:bg-blue-400 w-full">
                   Continue to Payment
-                </Button>
+                </Button>}
+               
               </DialogFooter>
             </form>
           </DialogHeader>
