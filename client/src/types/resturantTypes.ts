@@ -1,4 +1,5 @@
 import Resturant from "@/admin/Resturant";
+import { Orders } from "./orderType";
 
 export type MenuItem={
     _id:string,
@@ -33,7 +34,7 @@ export type ResturantState = {
     searchedResturant: searchedResturant|null;
     appliedFilter: [];
     signleResturant: Resturant|null;
-    //resturantOrder: Orders[];
+    resturantOrder: Orders[];
     
     createResturant:(formData:FormData)=>Promise<void>;
     getResturant:()=>Promise<void>;
@@ -44,6 +45,8 @@ export type ResturantState = {
     setAppliedFilter:(value:string)=>void;
     resetAppliedFilter:()=>void
     getSingleResturant:(resturantId:string)=>void
+    getresturantOrder:()=>Promise<void>;
+    updateResturantOrder:(orderId:string)=>Promise<void>
   
   };
   
