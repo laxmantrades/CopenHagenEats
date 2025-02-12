@@ -42,12 +42,14 @@ import {
 import { Separator } from "./ui/separator";
 import {  useUserStore } from "@/store/useUserStore";
 import { useCartStore } from "@/store/useCartStore";
+import { useThemeStore } from "@/store/useThemeStore";
 
 
 const NavBar = () => {
  
   const {logout,loading,user}=useUserStore()
   const{cart}=useCartStore()
+  const{setTheme}=useThemeStore()
   const isLoading:boolean=loading
 
   const logoutHandler=async()=>{
@@ -61,7 +63,7 @@ const NavBar = () => {
           <div className="flex space-x-5">
             <Link to={"/"}>Home</Link>
             <Link to={"/profile"}>Profile</Link>
-            <Link to={"/order"}>Order</Link>
+            <Link to={"/order/status"}>Order</Link>
             
           </div>
           {user?.admin && (
@@ -94,8 +96,8 @@ const NavBar = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Light</DropdownMenuItem>
-                    <DropdownMenuItem>Dark</DropdownMenuItem>
+                    <DropdownMenuItem onClick={()=>setTheme("light")}>Light</DropdownMenuItem>
+                    <DropdownMenuItem onClick={()=>setTheme("dark")}>Dark</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -149,6 +151,7 @@ export default NavBar;
  
 const MobileNavbar = () => {
   const{logout,user}=useUserStore()
+  const{setTheme}=useThemeStore()
   return (
     <div>
       <Sheet>
@@ -173,8 +176,8 @@ const MobileNavbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Light</DropdownMenuItem>
-                <DropdownMenuItem>Dark</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>setTheme("light")}>Light</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>setTheme("dark")}>Dark</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SheetHeader>
