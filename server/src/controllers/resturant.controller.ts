@@ -137,7 +137,7 @@ export const updateOrderStatus: RequestHandler = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Succefully updated Status",
-      order,
+      status:order.status,
     });
   } catch (error) {
     next(error);
