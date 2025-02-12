@@ -46,7 +46,7 @@ export type ResturantState = {
     resetAppliedFilter:()=>void
     getSingleResturant:(resturantId:string)=>void
     getresturantOrder:()=>Promise<void>;
-    updateResturantOrder:(orderId:string)=>Promise<void>
+    updateResturantOrder:(orderId:string,status:string)=>Promise<void>
   
   };
   
