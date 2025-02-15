@@ -31,6 +31,9 @@ app.use("/api/v1/resturant", resturantRouter);
 app.use("/api/v1/menu", menuRouter);
 app.use("/api/v1/order", orderRoute);
 app.use(errorHandler);
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
 
 
 
