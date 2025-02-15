@@ -12,7 +12,7 @@ const ResetPassword=()=>{
     const submitHandler=async(e:FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
         try {
-          await resetPassword(newpassword,token)
+          await resetPassword(newpassword,token!)
         } catch (error) {
           console.log(error);
           

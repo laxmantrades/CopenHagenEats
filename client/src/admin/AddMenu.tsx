@@ -174,7 +174,7 @@ const {resturant}=useResturantStore()
           </DialogContent>
         </Dialog>
       </div>
-      {resturant.menu.map((menu:any, id:number) => (
+      {resturant?.menu.map((menu:any, id:number) => (
         <div key={id} className="mt-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center md:space-x-4 md:p-4 p-2 shadow-md rounded-lg border">
             <img

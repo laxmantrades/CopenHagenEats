@@ -32,7 +32,7 @@ export type ResturantState = {
     loading: boolean;
     resturant:Resturant| null;
     searchedResturant: searchedResturant|null;
-    appliedFilter: [];
+    appliedFilter: string[];
     signleResturant: Resturant|null;
     resturantOrder: Orders[];
     

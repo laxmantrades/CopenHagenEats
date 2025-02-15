@@ -161,7 +161,7 @@ const appRouter = createBrowserRouter([
   },
 ]);
 function App() {
-  const { checkAuthentication, isCheckingAuth, user } = useUserStore();
+  const { checkAuthentication, isCheckingAuth } = useUserStore();
   const initializeTheme = useThemeStore((state:any) => state.initializeTheme);
 
   useEffect(() => {

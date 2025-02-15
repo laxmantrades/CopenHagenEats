@@ -32,7 +32,7 @@ const FilterPage = () => {
           <div key={options.id} className="flex items-center space-x-2 my-5">
             <Checkbox
               className="p-0"
-              checked={appliedFilter?.includes(options.label)}
+              checked={appliedFilter?.includes(options?.label)}
               id={options.id}
               onClick={() => appliedFilterHandler(options.label)}
             />

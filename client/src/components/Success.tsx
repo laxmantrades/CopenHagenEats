@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import pizza from "../assets/hero_pizza.png"
+
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { useOrderStore } from "@/store/useOrderStore";
