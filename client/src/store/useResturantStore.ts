@@ -6,7 +6,10 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const API_END_POINT = "http://localhost:3000/api/v1/resturant";
+const API_END_POINT = window.location.hostname === "challenge.devconnectify.com"
+  ? "https://challenge.devconnectify.com/api/v1/resturant"
+  : "http://localhost:3000/api/v1/resturant";
+
 axios.defaults.withCredentials = true;
 export const useResturantStore = create<ResturantState>()(
   persist(
