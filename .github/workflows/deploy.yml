@@ -16,8 +16,9 @@ jobs:
         
       # Step to pull the latest changes from the repository (optional if checkout is already there)
       - name: Pull latest code
-        run: git pull origin main 
-
+        run: |
+          git fetch --all
+          git reset --hard origin/main
       # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
       - name: Set up AWS CLI
         run: |
