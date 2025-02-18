@@ -38,7 +38,10 @@ jobs:
       # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
       - name: Set up Kubeconfig
         run: |
-          mkdir -p $HOME/.kube
+          echo "Checking if .kube directory exists"
+          ls -la $HOME/.kube
+          mkdir -p $HOME/.kube  # Just in case
+          echo "Directory check completed"
           echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       # Deploy the frontend to Kubernetes
