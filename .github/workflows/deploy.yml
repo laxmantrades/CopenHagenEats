@@ -51,6 +51,11 @@ jobs:
       - name: Deploy frontend to Kubernetes
         run: kubectl apply -f k8s_manifests/Frontend/frontend-deployment.yaml
 
+      # Apply the Ingress resource (ALB setup for your frontend and backend)
+      - name: Apply Ingress for load balancing
+        run: |
+          kubectl apply -f k8s_manifests/full_stack_lb.yaml
+
       # Wait for the frontend pod to be ready
       - name: Wait for frontend pod
         run: |
