@@ -39,10 +39,13 @@ jobs:
       - name: Set up Kubeconfig
         run: |
           echo "Checking if .kube directory exists"
-          ls -la $HOME/.kube
-          mkdir -p $HOME/.kube  # Just in case
+          ls -la $HOME  # Check the contents of the home directory
+          mkdir -p $HOME/.kube  # Create the .kube directory if it doesn't exist
           echo "Directory check completed"
-          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+          ls -la $HOME/.kube  # Confirm that .kube directory exists after creation
+          echo "Decoding Kubeconfig from secrets"
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config  # Decode and save the Kubeconfig
+          echo "Kubeconfig setup completed"
 
       # Deploy the frontend to Kubernetes
       - name: Deploy frontend to Kubernetes
