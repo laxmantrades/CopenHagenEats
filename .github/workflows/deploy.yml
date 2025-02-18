@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+        
+      # Step to pull the latest changes from the repository (optional if checkout is already there)
+      - name: Pull latest code
+        run: git pull origin main 
+
       # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
       - name: Set up AWS CLI
         run: |
