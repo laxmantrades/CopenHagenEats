@@ -38,6 +38,7 @@ jobs:
       # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
       - name: Set up Kubeconfig
         run: |
+          mkdir -p $HOME/.kube
           echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       # Deploy the frontend to Kubernetes
