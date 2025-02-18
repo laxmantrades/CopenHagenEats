@@ -13,12 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-        
-      # Step to pull the latest changes from the repository (optional if checkout is already there)
-      - name: Pull latest code
+      - name: Git Pull
         run: |
-          git fetch --all
-          git reset --hard origin/main
+         git fetch --all
+         git reset --hard origin/main
+         git pull origin main
+
+        
+     
       # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
       - name: Set up AWS CLI
         run: |
@@ -40,6 +42,7 @@ jobs:
         run: |
           docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:latest ./client
           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:latest 
+          
 
       # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
       - name: Set up Kubeconfig
