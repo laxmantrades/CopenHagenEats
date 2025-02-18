@@ -32,8 +32,8 @@ jobs:
       # Build the Docker image and push to ECR
       - name: Build and Push Docker image to ECR
         run: |
-          docker build -t 407622020962.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest .
-          docker push 407622020962.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
+          docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:latest .
+          docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:latest
 
       # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
       - name: Set up Kubeconfig
