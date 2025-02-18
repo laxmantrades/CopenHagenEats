@@ -1,0 +1,50 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - main  # Or the branch you want to trigger this action on
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
+      - name: Set up AWS CLI
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region eu-north-1
+
+      # Set up Docker Buildx for building images
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Log into Amazon ECR
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 407622020962.dkr.ecr.eu-north-1.amazonaws.com
+
+      # Build the Docker image and push to ECR
+      - name: Build and Push Docker image to ECR
+        run: |
+          docker build -t 407622020962.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest .
+          docker push 407622020962.dkr.ecr.eu-north-1.amazonaws.com/frontend:latest
+
+      # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
+      - name: Set up Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+
+      # Deploy the frontend to Kubernetes
+      - name: Deploy frontend to Kubernetes
+        run: kubectl apply -f k8s_manifests/Frontend/frontend-deployment.yaml
+
+      # Wait for the frontend pod to be ready
+      - name: Wait for frontend pod
+        run: |
+          kubectl rollout status deployment/frontend -n workshop
