@@ -57,7 +57,7 @@ jobs:
           docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:$GIT_SHA ./client
           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:$GIT_SHA 
  
-          docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA ./client
+          docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA ./server
           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA 
           
 
