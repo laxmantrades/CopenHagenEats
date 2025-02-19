@@ -18,10 +18,17 @@ jobs:
          git fetch --all
          git reset --hard origin/main
          git pull origin main
-         
+
       # Extract Git SHA (unique version for tagging)
       - name: Get Git SHA
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        
+      # 🔹 Update the deployment file with the correct Git SHA
+      - name: Update Kubernetes Deployment YAML with Git SHA
+        run: |
+          sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Frontend/frontend-deployment.yaml
+          cat k8s_manifests/Frontend/frontend-deployment.yaml  # Debugging: Print the file content
+     
         
      
       # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
