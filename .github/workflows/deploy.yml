@@ -27,6 +27,8 @@ jobs:
       - name: Update Kubernetes Deployment YAML with Git SHA
         run: |
           sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Frontend/frontend-deployment.yaml
+          sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Backend/backend-deployment.yaml
+
           cat k8s_manifests/Frontend/frontend-deployment.yaml  # Debugging: Print the file content
           cat k8s_manifests/Backend/backend-deployment.yaml  # Debugging: Print the file content
 
