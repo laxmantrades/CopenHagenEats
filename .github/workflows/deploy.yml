@@ -13,11 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Git Pull
-        run: |
-         git fetch --all
-         git reset --hard origin/main
-         git pull origin main
+      
 
       # Extract Git SHA (unique version for tagging)c
       - name: Get Git SHA
