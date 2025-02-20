@@ -8,7 +8,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 const API_END_POINT = window.location.hostname === "challenge.devconnectify.com"
   ? "https://challenge.devconnectify.com/api/v1/resturant"
-  : "http://localhost:3000/api/v1/resturant";
+  : "http://localhost:8080/api/v1/resturant";
 
 axios.defaults.withCredentials = true;
 export const useResturantStore = create<ResturantState>()(

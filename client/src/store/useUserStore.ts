@@ -32,7 +32,7 @@ type UserState = {
 
 const API_END_POINT = window.location.hostname === "challenge.devconnectify.com"
   ? "https://challenge.devconnectify.com/api/v1/user"
-  : "http://localhost:3000/api/v1/user";
+  : "http://localhost:8080/api/v1/user";
 
 axios.defaults.withCredentials = true;
 export const useUserStore = create<UserState>()(
