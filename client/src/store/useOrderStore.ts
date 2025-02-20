@@ -21,6 +21,8 @@ export const useOrderStore=create<OrderState>()(persist((set)=>({
             }})
            
             window.location.href=response.data.session.url
+            
+            
 
 
             set({loading:false})
