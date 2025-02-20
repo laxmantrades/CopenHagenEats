@@ -21,8 +21,8 @@ spec:
       labels:
         role: api
     spec:
-      #imagePullSecrets:
-      #- name: ecr-registry-secret
+      imagePullSecrets:
+      - name: ecr-registry-secret
       containers:
         - name: api
           image: 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:${GITHUB_SHA}
