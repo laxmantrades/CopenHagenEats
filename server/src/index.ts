@@ -40,6 +40,6 @@ app.get("/api/v1/health", (req, res) => {
 
 connectDb().then(() =>
   app.listen(PORT, () => {
-    console.log(`Server is running at port too  ${PORT}`);
+    console.log(`Server is running at port to  ${PORT}`);
   })
 );
