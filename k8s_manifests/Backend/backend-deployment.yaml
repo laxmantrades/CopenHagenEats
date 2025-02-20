@@ -40,6 +40,9 @@ spec:
                 secretKeyRef:
                   name: mongo-sec
                   key: password
+          envFrom:
+            - secretRef:
+                name: app-secrets 
           ports:
             - containerPort: 8080
           livenessProbe:
