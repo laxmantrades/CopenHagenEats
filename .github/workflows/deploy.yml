@@ -28,10 +28,11 @@ jobs:
         run: |
           sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Frontend/frontend-deployment.yaml
           cat k8s_manifests/Frontend/frontend-deployment.yaml  # Debugging: Print the file content
-        #  sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Backend/backend-deployment.yaml
+          
+          sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Backend/backend-deployment.yaml
 
-         # cat k8s_manifests/Frontend/frontend-deployment.yaml  # Debugging: Print the file content
-         # cat k8s_manifests/Backend/backend-deployment.yaml  # Debugging: Print the file content
+          
+          cat k8s_manifests/Backend/backend-deployment.yaml  # Debugging: Print the file content
 
      
         
@@ -78,7 +79,7 @@ jobs:
       - name: Deploy frontend to Kubernetes
         run: |
           kubectl apply -f k8s_manifests/Frontend/frontend-deployment.yaml
-        #  kubectl apply -f k8s_manifests/Backend/backend-deployment.yaml
+          kubectl apply -f k8s_manifests/Backend/backend-deployment.yaml
 
       # Apply the Ingress resource (ALB setup for your frontend and backend)
       - name: Apply Ingress for load balancing
