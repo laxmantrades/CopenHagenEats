@@ -19,7 +19,7 @@ jobs:
          git reset --hard origin/main
          git pull origin main
 
-      # Extract Git SHA (unique version for tagging)
+      # Extract Git SHA (unique version for tagging)c
       - name: Get Git SHA
         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
         
