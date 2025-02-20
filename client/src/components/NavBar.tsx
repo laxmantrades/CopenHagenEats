@@ -58,7 +58,7 @@ const NavBar = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="h-14 flex  items-center justify-between ">
-        <h1 className="text-2xl md:font-extrabold ">CopenHagen Eats Check</h1>
+        <h1 className="text-2xl md:font-extrabold ">CopenHagen Eats </h1>
         <div className="hidden md:flex items-center space-x-3">
           <div className="flex space-x-5">
             <Link to={"/"}>Home</Link>
