@@ -1,5 +1,12 @@
-import { Avatar, AvatarFallback, } from "@radix-ui/react-avatar";
-import { Loader2, LocateIcon, Mail, MapPin, MapPinnedIcon, Plus } from "lucide-react";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import {
+  Loader2,
+  LocateIcon,
+  Mail,
+  MapPin,
+  MapPinnedIcon,
+  Plus,
+} from "lucide-react";
 import { useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -18,29 +25,30 @@ type ProfileDataState = {
 const Profile = () => {
   const imagreRef = useRef<HTMLInputElement | null>(null);
 
-  const{user,updateProfile,loading}=useUserStore()
-  const[isLoading,setIsLoading]=useState<boolean>(loading)
- 
+  const { user, updateProfile, loading } = useUserStore();
+  const [isLoading, setIsLoading] = useState<boolean>(loading);
+
   const [profilestate, setProfileData] = useState<ProfileDataState>({
-    fullname:user?.fullname|| "",
-    email: user?.email||"",
+    fullname: user?.fullname || "",
+    email: user?.email || "",
     contact: "",
-    address:user?.address|| "",
-    city: user?.city||"",
-    country:user?.country|| "",
-    profilePicture: user?.profilePicture||"",
+    address: user?.address || "",
+    city: user?.city || "",
+    country: user?.country || "",
+    profilePicture: user?.profilePicture || "",
   });
   const fileChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e?.target?.files?.[0];
     if (file) {
-      const reader=new FileReader()
-      reader.onloadend=()=>{
-        const result=reader.result as string
-      
-        setProfileData((prev)=>({
-            ...prev,profilePicture:result
-        }))
-      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+
+        setProfileData((prev) => ({
+          ...prev,
+          profilePicture: result,
+        }));
+      };
       reader.readAsDataURL(file);
     }
   };
@@ -49,22 +57,16 @@ const Profile = () => {
     setProfileData({ ...profilestate, [name]: value });
   };
 
-  const updateProfileHandler = async(e: React.FormEvent<HTMLFormElement>) => {
+  const updateProfileHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-
-      
-      setIsLoading(true)
-      await updateProfile(profilestate)
-      setIsLoading(false)
-  
+      setIsLoading(true);
+      await updateProfile(profilestate);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      setIsLoading(false)
+      setIsLoading(false);
     }
-   
-
-    
   };
   return (
     <form onSubmit={updateProfileHandler} className="max-w-7xl mx-auto my-5 ">
@@ -73,7 +75,10 @@ const Profile = () => {
           <Avatar className="relative md:w-28 md:h-28 w-20 h-20">
             <img
               className="rounded-full object-cover object-top w-20 h-20  md:h-28 md:w-28 "
-              src={profilestate.profilePicture||"https://staticg.sportskeeda.com/editor/2024/05/d973a-17150616187538-1920.jpg"}
+              src={
+                profilestate.profilePicture ||
+                "https://staticg.sportskeeda.com/editor/2024/05/d973a-17150616187538-1920.jpg"
+              }
             />
             <AvatarFallback></AvatarFallback>
             <input
@@ -90,15 +95,14 @@ const Profile = () => {
               <Plus className="text-white w-8 h-8" />
             </div>
           </Avatar>
-         
         </div>
         <Input
-            value={profilestate.fullname}
-            onChange={onChangeHandler}
-            type="text"
-            name="fullname"
-            className="font-bold md:text-4xl px-2 md:py-7  outline-double border-none  max-w-1xl w-96 "
-          />
+          value={profilestate.fullname}
+          onChange={onChangeHandler}
+          type="text"
+          name="fullname"
+          className="font-bold md:text-4xl px-2 md:py-7  outline-double border-none  max-w-1xl w-96 "
+        />
       </div>
       <div className=" md:flex justify-center md:space-x-4">
         <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200 my-2 md:my-0">
@@ -118,7 +122,7 @@ const Profile = () => {
           <div className="w-full">
             <Label>Address</Label>
             <input
-            onChange={onChangeHandler}
+              onChange={onChangeHandler}
               placeholder="Update your address"
               name="address"
               value={profilestate.address}
@@ -134,7 +138,6 @@ const Profile = () => {
               value={profilestate.city}
               onChange={onChangeHandler}
               name="city"
-              
               className="w-full text-gray-600 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
             />
           </div>
@@ -144,7 +147,6 @@ const Profile = () => {
           <div className="w-full">
             <Label>Country</Label>
             <input
-              
               name="country"
               value={profilestate.country}
               onChange={onChangeHandler}
@@ -152,11 +154,19 @@ const Profile = () => {
             />
           </div>
         </div>
-        
       </div>
       <div className="text-center mt-5">
-            {!isLoading?<Button className="text-xl bg-orange-500 hover:orange-500">Update </Button>:<Button> <Loader2 className="animate-spin "/></Button>}
-        </div>
+        {!isLoading ? (
+          <Button className="text-xl bg-orange-500 hover:orange-500">
+            Update{" "}
+          </Button>
+        ) : (
+          <Button>
+            {" "}
+            <Loader2 className="animate-spin " />
+          </Button>
+        )}
+      </div>
     </form>
   );
 };
