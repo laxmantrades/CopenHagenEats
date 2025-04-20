@@ -9,9 +9,6 @@ import cors from "cors";
 import resturantRouter from "./routes/resturant.route";
 import menuRouter from "./routes/menu.route";
 import orderRoute from "./routes/order.route";
- 
-console.log("hi");
-
 
 dotenv.config();
 
