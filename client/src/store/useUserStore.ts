@@ -81,6 +81,8 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           toast.error(error.response.data.message);
+          console.log(error);
+          
           set({ loading: false });
         }
       },
