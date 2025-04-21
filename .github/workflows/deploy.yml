@@ -13,26 +13,20 @@
 #       - name: Checkout code
 #         uses: actions/checkout@v2
 
-      
-
 #       # Extract Git SHA (unique version for tagging)c
 #       - name: Get Git SHA
 #         run: echo "GIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-        
+
 #       # 🔹 Update the deployment file with the correct Git SHA
 #       - name: Update Kubernetes Deployment YAML with Git SHA
 #         run: |
 #           sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Frontend/frontend-deployment.yaml
 #           cat k8s_manifests/Frontend/frontend-deployment.yaml  # Debugging: Print the file content
-          
+
 #           sed -i "s|\${GITHUB_SHA}|$GIT_SHA|g" k8s_manifests/Backend/backend-deployment.yaml
 
-          
 #           cat k8s_manifests/Backend/backend-deployment.yaml  # Debugging: Print the file content
 
-     
-        
-     
 #       # Set up AWS CLI and configure it with the AWS Access Key ID and Secret Access Key
 #       - name: Set up AWS CLI
 #         run: |
@@ -53,11 +47,10 @@
 #       - name: Build and Push Docker image to ECR
 #         run: |
 #           docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:$GIT_SHA ./client
-#           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:$GIT_SHA 
- 
+#           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-frontend:$GIT_SHA
+
 #           docker build -t 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA ./server
-#           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA 
-          
+#           docker push 440744253012.dkr.ecr.eu-north-1.amazonaws.com/copenhageneats-backend:$GIT_SHA
 
 #       # Set up Kubeconfig for kubectl using the base64 Kubeconfig secret
 #       - name: Set up Kubeconfig
@@ -81,8 +74,6 @@
 #       - name: Apply Ingress for load balancing
 #         run: |
 #           kubectl apply -f k8s_manifests/full_stack_lb.yaml
-
-
 
 #       # Wait for the frontend pod to be ready
 #       - name: Wait for frontend pod
