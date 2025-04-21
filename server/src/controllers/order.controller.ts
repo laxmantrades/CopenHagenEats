@@ -1,7 +1,8 @@
 import { RequestHandler } from "express";
-import { Resturant } from "../models/resturant.model";
+import { IRestaurantDocument, Resturant } from "../models/resturant.model";
 import { Order } from "../models/order.model";
 import Stripe from "stripe";
+import { prisma } from "../db/connectDb";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -61,6 +62,25 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       });
       return;
     }
+
+    const restaurantId = resturant._id as string;
+    //Database Call
+
+    const newOrder = await prisma.order.create({
+      data: {
+        userId: req.id,
+        restaurantId: restaurantId,
+
+        userdeliveryEmail: checkoutsessionRequest?.deliveryDetails?.email,
+        userdeliveryName: checkoutsessionRequest?.deliveryDetails?.name,
+        userdeliveryAddress: checkoutsessionRequest?.deliveryDetails?.address,
+        userdeliveryCity: checkoutsessionRequest?.deliveryDetails?.city,
+        cartItems: checkoutsessionRequest?.cartItems,
+        totalAmount: 0,
+        status: "pending",
+      },
+    });
+
     const order: any = new Order({
       resturant: resturant._id,
       user: req.id,
@@ -76,7 +96,7 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       shipping_address_collection: {
-        allowed_countries: ["GB", "US", "CA","DK"],
+        allowed_countries: ["GB", "US", "CA", "DK"],
       },
       line_items: lineItems,
       mode: "payment",
@@ -84,6 +104,7 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       cancel_url: `${process.env.FRONTEND_URL}/cart`,
       metadata: {
         orderId: order._id.toString(),
+        neworderId:newOrder.id,
         images: JSON.stringify(menuItems.map((item: any) => item.image)),
       },
     });
@@ -102,60 +123,60 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
   }
 };
 
-
-export const stripeWebhook :RequestHandler= async (req , res,next) => {
+export const stripeWebhook: RequestHandler = async (req, res, next) => {
   let event;
 
   try {
-      const signature = req.headers["stripe-signature"];
+    const signature = req.headers["stripe-signature"];
 
-      // Construct the payload string for verification
-      const payloadString = JSON.stringify(req.body, null, 2);
-      const secret = process.env.WEBHOOK_ENDPOINT_SECRET!;
+    // Construct the payload string for verification
+    const payloadString = JSON.stringify(req.body, null, 2);
+    const secret = process.env.WEBHOOK_ENDPOINT_SECRET!;
 
-      // Generate test header string for event construction
-      const header = stripe.webhooks.generateTestHeaderString({
-          payload: payloadString,
-          secret,
-      });
+    // Generate test header string for event construction
+    const header = stripe.webhooks.generateTestHeaderString({
+      payload: payloadString,
+      secret,
+    });
 
-      // Construct the event using the payload string and header
-      event = stripe.webhooks.constructEvent(payloadString, header, secret);
+    // Construct the event using the payload string and header
+    event = stripe.webhooks.constructEvent(payloadString, header, secret);
   } catch (error: any) {
-      console.error('Webhook error:', error.message);
-       res.status(400).send(`Webhook error: ${error.message}`);
-       return
+    console.error("Webhook error:", error.message);
+    res.status(400).send(`Webhook error: ${error.message}`);
+    return;
   }
 
   // Handle the checkout session completed event
   if (event.type === "checkout.session.completed") {
-      try {
-          const session = event.data.object as Stripe.Checkout.Session;
-          const order = await Order.findById(session.metadata?.orderId);
+    try {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const order = await Order.findById(session.metadata?.orderId);
+      const neworder=await prisma.order.findUnique({
+        where:{
+          id:Number(session?.metadata?.neworderId)
+        }
+      })
 
-          if (!order) {
-              res.status(404).json({ message: "Order not found" });
-              return
-          }
-
-          // Update the order with the amount and status
-          if (session.amount_total) {
-              order.totalAmount = session.amount_total;
-          }
-          order.status = "confirmed";
-
-          await order.save();
-      } catch (error) {
-          next(error)
+      if (!order || !neworder) {
+        res.status(404).json({ message: "Order not found" });
+        return;
       }
+
+      // Update the order with the amount and status
+      if (session.amount_total) {
+        order.totalAmount = session.amount_total;
+      }
+      order.status = "confirmed";
+
+      await order.save();
+    } catch (error) {
+      next(error);
+    }
   }
   // Send a 200 response to acknowledge receipt of the event
   res.status(200).send();
 };
-
-
-
-
 
 export const createLineItems = (
   checkoutsessionRequest: CheckOutSessionRequest,
