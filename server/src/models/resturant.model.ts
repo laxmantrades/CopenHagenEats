@@ -10,12 +10,12 @@ export interface IResturant{
     menu:mongoose.Schema.Types.ObjectId[]
 
 }
-export interface IUserDocument extends IResturant,Document{
+export interface IRestaurantDocument extends IResturant,Document{
     createdAt:Date,
     updatedAt:Date
 }
 
-const resturantSchema=new mongoose.Schema<IUserDocument>({
+const resturantSchema=new mongoose.Schema<IRestaurantDocument>({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
