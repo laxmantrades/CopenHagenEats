@@ -43,7 +43,7 @@ const CheckOutConfirmPage = ({
   };
   const checkOutHandler =async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+  
     //
     try {
       const checkoutData: CheckoutSessionRequest = {
@@ -75,7 +75,7 @@ const CheckOutConfirmPage = ({
             </DialogTitle>
             <DialogDescription>Double Check</DialogDescription>
             <form
-              onClick={checkOutHandler}
+              onSubmit={checkOutHandler}
               className="md:grid grid-cols-2 gap-2 space-y-1 md:space-y-0"
             >
               <div>
