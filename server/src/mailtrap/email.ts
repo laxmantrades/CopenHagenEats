@@ -6,13 +6,10 @@ import {
 } from "./htmlEmail";
 import { client, sender } from "./mailtrap";
 
-export const sendVerificationEmail = async (
-  email: string,
-  verificationToken: string
-) => {
-  const recipients = [{ email }];
+export const sendVerificationEmail = async (email:string,verificationToken: string) => {
+  const recipients = [{ email: "laxmancheckemail@gmail.com" }];
   try {
-    const res = await client.send({
+    await client.send({
       from: sender,
       to: recipients,
       subject: "Verify your email",
@@ -26,7 +23,7 @@ export const sendVerificationEmail = async (
 };
 
 export const sendWelcomeEmail = async (email: string, name: string) => {
-  const recipients = [{ email }];
+  const recipients = [{ email:"laxmancheckemail@gmail.com" }];
   const htmlContent = generateWelcomeEmailHtml(name);
   try {
     const res = await client.send({
@@ -50,7 +47,7 @@ export const sendPasswordResetEmail = async (
   email: string,
   resetURL: string
 ) => {
-  const recipients = [{ email }];
+  const recipients = [{ email:"laxmancheckemail@gmail.com" }];
   const htmlContent = generatePasswordResetEmailHtml(resetURL);
   try {
     const res = await client.send({
