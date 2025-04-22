@@ -6,20 +6,15 @@ export type CheckoutSessionRequest={
         price:string,
         quantity:string
     }[];
-    deliveryDetails:{
-        name:string,
-        email:string,
-        contact:string,
-        address:string,
-        city:string,
-        country:string,
-
-    },
+    userdeliveryAddress: string
+     userdeliveryCity: string
+    userdeliveryEmail: string
+    userdeliveryName:string
     resturantId:string
 }
 
 export interface Orders extends CheckoutSessionRequest{
-    _id:string,
+    id:string,
     status:string,
     totalAmount:number
 }
