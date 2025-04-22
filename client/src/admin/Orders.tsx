@@ -11,8 +11,11 @@ import { useResturantStore } from "@/store/useResturantStore";
 import { useEffect } from "react";
 
 const Orders = () => {
+  //api callstates
   const { getresturantOrder, updateResturantOrder ,resturantOrder} = useResturantStore();
-
+  
+  
+  //api call for status change
   const  handleStatusChange=async(id:string,status:string)=>{
     try {
       await updateResturantOrder(id,status)
@@ -21,6 +24,7 @@ const Orders = () => {
     }
   }
   
+  //fetch resturantorder after render
   useEffect(() => {
     getresturantOrder();
   }, []);
@@ -34,15 +38,15 @@ const Orders = () => {
         {resturantOrder?.map((order)=> <div className="flex flex-col md:flex-row justify-between items-start sm:items-center bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700">
           <div className="flex-1 mb-6 sm:mb-0">
             <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-              {order.deliveryDetails.name}
+              {order?.userdeliveryName }
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
               <span className="font-semibold">Address: </span>
-              {order.deliveryDetails.address}
+              {order?.userdeliveryAddress}
             </p>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
               <span className="font-semibold">Total Amount: </span>
-              {order.totalAmount / 100}
+              {order?.totalAmount / 100}
             </p>
           </div>
           <div className="w-full sm:w-1/3">
@@ -51,7 +55,7 @@ const Orders = () => {
             </Label>
             <Select
              onValueChange={(newStatus) =>
-              handleStatusChange(order._id, newStatus)
+              handleStatusChange(order?.id, newStatus)
              }
             defaultValue={order.status}
             >
@@ -66,8 +70,8 @@ const Orders = () => {
                     "Preparing",
                     "OutForDelivery",
                     "Delivered",
-                  ].map((status: string, index: number) => (
-                    <SelectItem key={index} value={status.toLowerCase()}>
+                  ]?.map((status: string, index: number) => (
+                    <SelectItem key={index} value={status?.toLowerCase()}>
                       {status}
                     </SelectItem>
                   ))}
