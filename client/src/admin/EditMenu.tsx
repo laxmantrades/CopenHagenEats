@@ -14,6 +14,7 @@ import { MenuFormType, menuSchema } from "@/schema/menuSchema";
 import { Loader2 } from "lucide-react";
 import { MenuItem } from "@/types/resturantTypes";
 import { useMenuStore } from "@/store/useMenuStore";
+import { toast } from "sonner";
 
 const EditMenu = ({
   editOpen,
@@ -57,12 +58,12 @@ const EditMenu = ({
       
       await editMenu(formData ,selectedMenu._id );
     } catch (error) {
-      console.log(error);
+      toast.error("Error in editing menu")
     }
     
   };
   useEffect(() => {
-    console.log(selectedMenu);
+    
     
     setInput({
       name: selectedMenu?.name || "",
