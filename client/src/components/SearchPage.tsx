@@ -12,17 +12,21 @@ import { Skeleton } from "./ui/skeleton";
 import { useResturantStore } from "@/store/useResturantStore";
 import { Resturant } from "@/types/resturantTypes";
 
+
 const SearchPage = () => {
   const params = useParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { searchResturant, searchedResturant, appliedFilter, loading,setAppliedFilter } =
-    useResturantStore();
+  const {
+    searchResturant,
+    searchedResturant,
+    appliedFilter,
+    loading,
+    setAppliedFilter,
+  } = useResturantStore();
   useEffect(() => {
     searchResturant(params.text!, searchQuery, appliedFilter);
-    
   }, [appliedFilter, params.text!]);
-  
-  
+
   return (
     <div className="max-w-7xl mx-auto my-10">
       <div className="flex flex-col md:flex-row justify-between gap-10">
@@ -38,25 +42,33 @@ const SearchPage = () => {
               value={searchQuery}
               placeholder="Search by resturant & cuisines"
             />
-            <Button onClick={()=>{console.log("clicked");
-             searchResturant(params.text!,searchQuery,appliedFilter)}} className="bg-orange-400">Search</Button>
+            <Button
+              onClick={() => {
+               
+                searchResturant(params.text!, searchQuery, appliedFilter);
+              }}
+              className="bg-orange-400"
+            >
+              Search
+            </Button>
           </div>
           {/*search cards*/}
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-2 my-3">
-            <h1 className="font-medium text-xl">({searchedResturant?.data?.length}) search results found</h1>
+            <h1 className="font-medium text-xl">
+              ({searchedResturant?.data?.length}) search results found
+            </h1>
             <div className="flex flex-wrap mb-4 md:mb-0">
-              {appliedFilter.map(
-                (selectedFilter: string, idx: number) => (
-                  <div key={idx} className="relative inline-flex items-center max-w-full ">
-                    <Badge
-                      className="ml-2 rounded-medium pr-6"
-                      variant="outline"
-                    >
-                      {selectedFilter} <X onClick={()=>setAppliedFilter(selectedFilter)}/>
-                    </Badge>
-                  </div>
-                )
-              )}
+              {appliedFilter.map((selectedFilter: string, idx: number) => (
+                <div
+                  key={idx}
+                  className="relative inline-flex items-center max-w-full "
+                >
+                  <Badge className="ml-2 rounded-medium pr-6" variant="outline">
+                    {selectedFilter}{" "}
+                    <X onClick={() => setAppliedFilter(selectedFilter)} />
+                  </Badge>
+                </div>
+              ))}
             </div>
           </div>
           {/*Resturnat Card */}
