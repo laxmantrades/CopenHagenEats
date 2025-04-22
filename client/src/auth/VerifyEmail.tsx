@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { Loader2 } from "lucide-react";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const VerifyEmail = () => {
   const [otp, setOTP] = useState<string[]>(["", "", "", "", "", ""]);
@@ -45,7 +46,7 @@ const VerifyEmail = () => {
       await verifyEmail(verificationCode)
       navigate("/")
     } catch (error) {
-      console.log(error);
+      toast.error("Error in verifying email!")
       
     }
    
