@@ -16,6 +16,7 @@ import { useState } from "react";
 import EditMenu from "./EditMenu";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useResturantStore } from "@/store/useResturantStore";
+import { toast } from "sonner";
 
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -61,7 +62,7 @@ const {resturant}=useResturantStore()
       await createMenu(formData)
      
     } catch (error) {
-      console.log(error);
+      toast.error("Error in creating menu")
       
     }
   };
