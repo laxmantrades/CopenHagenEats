@@ -13,7 +13,7 @@ const Success = () => {
 
   useEffect(()=>{
     getOrderDetails()
-    console.log(orders);
+  
     clearCart()
 
   },[])
@@ -29,16 +29,17 @@ const Success = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 max-w-lg w-full">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">Order Status: <span className="text-[#FF5A5A]">{"confirm".toUpperCase()}</span></h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-300">Order Status: </h1>
         </div>
         <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Order Summary</h2>
-            {orders?.map((order)=><div key={order._id} className="mb-4">
+            {orders?.map((order)=><div key={order.id} className="mb-4">
                 <div  className="flex justify-between items-center">
                     <div className="flex items-center">
                         <img src={order.cartItems[0].image} className="w-14 h-14 rounded-md object-cover"></img>
                         <h3 className="ml-3 text-gray-800 dark:text-gray-300 font-medium">{order.cartItems[0].name}</h3>
                     </div>
+                    <h1 className="text-red-500 font-bold">{order.status.toUpperCase()}</h1>
                     <div className="text-right">
                         <div className="text-gray-700 dark:text-gray-300 flex items-center">
                             <h2>{order.cartItems[0].price}Dkk</h2>
