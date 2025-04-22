@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { IRestaurantDocument, Resturant } from "../models/resturant.model";
-import { Order } from "../models/order.model";
+import {  Resturant } from "../models/resturant.model";
+
 import Stripe from "stripe";
 import { prisma } from "../db/connectDb";
 
@@ -32,15 +32,14 @@ type MenuItems = {
 
 export const getOrders: RequestHandler = async (req, res, next) => {
   try {
-    const orders = await Order.find({ user: req.id })
-      .populate("user")
-      .populate("resturant");
-    if (!orders) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-    }
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: req?.id,
+      },
+    });
+   
+
+    console.log(orders);
     res.status(200).json({
       success: true,
       orders,
@@ -52,6 +51,8 @@ export const getOrders: RequestHandler = async (req, res, next) => {
 export const createCheckOutSession: RequestHandler = async (req, res, next) => {
   try {
     const checkoutsessionRequest: CheckOutSessionRequest = req.body;
+
+    //finding restaurant and populating menus
     const resturant = await Resturant.findById(
       checkoutsessionRequest.resturantId
     ).populate("menu");
@@ -63,13 +64,12 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const restaurantId = resturant._id as string;
     //Database Call
-
+    //this will create order
     const newOrder = await prisma.order.create({
       data: {
         userId: req.id,
-        restaurantId: restaurantId,
+        restaurantId: resturant._id as string, //converting to string
 
         userdeliveryEmail: checkoutsessionRequest?.deliveryDetails?.email,
         userdeliveryName: checkoutsessionRequest?.deliveryDetails?.name,
@@ -81,18 +81,10 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       },
     });
 
-    const order: any = new Order({
-      resturant: resturant._id,
-      user: req.id,
-      deliveryDetails: checkoutsessionRequest.deliveryDetails,
-      cartItems: checkoutsessionRequest.cartItems,
-      status: "pending",
-    });
-
     //line items
     const menuItems = resturant.menu;
     const lineItems = createLineItems(checkoutsessionRequest, menuItems);
-
+    //stripe session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       shipping_address_collection: {
@@ -103,8 +95,7 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       success_url: `${process.env.FRONTEND_URL}/order/status`,
       cancel_url: `${process.env.FRONTEND_URL}/cart`,
       metadata: {
-        orderId: order._id.toString(),
-        neworderId:newOrder.id,
+        neworderId: newOrder.id,
         images: JSON.stringify(menuItems.map((item: any) => item.image)),
       },
     });
@@ -114,7 +105,7 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
         .json({ success: false, message: "Error while creating session" });
       return;
     }
-    await order.save();
+
     res.status(200).json({
       session,
     });
@@ -151,25 +142,22 @@ export const stripeWebhook: RequestHandler = async (req, res, next) => {
   if (event.type === "checkout.session.completed") {
     try {
       const session = event.data.object as Stripe.Checkout.Session;
-      const order = await Order.findById(session.metadata?.orderId);
-      const neworder=await prisma.order.findUnique({
-        where:{
-          id:Number(session?.metadata?.neworderId)
-        }
-      })
 
-      if (!order || !neworder) {
+      //postgresq update the order with the status and totalAmount
+      const neworder = await prisma.order.update({
+        where: {
+          id: Number(session?.metadata?.neworderId),
+        },
+        data: {
+          status: "confirmed",
+          totalAmount: Number(session?.amount_total),
+        },
+      });
+
+      if (!neworder) {
         res.status(404).json({ message: "Order not found" });
         return;
       }
-
-      // Update the order with the amount and status
-      if (session.amount_total) {
-        order.totalAmount = session.amount_total;
-      }
-      order.status = "confirmed";
-
-      await order.save();
     } catch (error) {
       next(error);
     }
@@ -183,10 +171,13 @@ export const createLineItems = (
   menuItems: any
 ) => {
   const lineItems = checkoutsessionRequest.cartItems.map((cartItem) => {
+    //finding if cartitems have correct menutItems
     const menuItem = menuItems.find(
       (item: any) => item._id.toString() === cartItem.menuId
     );
+    //if itemid doesn't match to cartitem id then throw error
     if (!menuItem) throw new Error("Menu Item id not found");
+    //if found then return these
     return {
       price_data: {
         currency: "dkk",

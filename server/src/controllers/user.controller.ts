@@ -43,7 +43,7 @@ export const signup: RequestHandler = async (req, res, next) => {
       userWithoutPassword,
     });
   } catch (error) {
-    console.log(error);
+    
     
     next(error);
   }
@@ -188,7 +188,7 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
 export const checkAuth: RequestHandler = async (req, res, next) => {
   try {
     const userId = req.id;
-    console.log(userId);
+ 
 
     if (!userId) {
       res.status(404).json({

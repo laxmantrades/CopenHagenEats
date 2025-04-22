@@ -3,6 +3,7 @@ import { Resturant } from "../models/resturant.model";
 import multer from "multer";
 import uploadImageOnCloudinary from "../utils/imageUpload";
 import { Order } from "../models/order.model";
+import { prisma } from "../db/connectDb";
 
 export const createResturant: RequestHandler = async (req, res, next) => {
   try {
@@ -108,9 +109,13 @@ export const getResturantOrder: RequestHandler = async (req, res, next) => {
       });
       return;
     }
-    const order = await Order.find({ resturant: resturant._id })
-      .populate("resturant")
-      .populate("user");
+   
+
+    const order = await prisma.order.findMany({
+      where: {
+        restaurantId: resturant?._id as string,
+      },
+    });
     res.status(200).json({
       success: true,
       message: "Succefully got users orders",
@@ -123,8 +128,17 @@ export const getResturantOrder: RequestHandler = async (req, res, next) => {
 export const updateOrderStatus: RequestHandler = async (req, res, next) => {
   try {
     const { orderId } = req.params;
+    console.log(orderId);
+    
     const { status } = req.body;
-    const order = await Order.findById(orderId);
+    const order = await prisma.order.update({
+      where: {
+        id: Number(orderId),
+      },
+      data: {
+        status,
+      },
+    });
     if (!order) {
       res.status(404).json({
         success: false,
@@ -132,12 +146,11 @@ export const updateOrderStatus: RequestHandler = async (req, res, next) => {
       });
       return;
     }
-    order.status = status;
-    await order.save();
+
     res.status(200).json({
       success: true,
       message: "Succefully updated Status",
-      status:order.status,
+      status: order.status,
     });
   } catch (error) {
     next(error);
