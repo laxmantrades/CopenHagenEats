@@ -48,7 +48,7 @@ const Cart = () => {
         </TableHeader>
         <TableBody>
           {cart.map((cart) => (
-            <TableRow>
+            <TableRow key={cart._id}>
               <TableCell className="font-medium">
                 <Avatar>
                   <AvatarImage src={cart.image} alt="" />

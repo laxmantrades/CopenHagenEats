@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import hero from "../assets/hero_pizza.png";
+
 
 import { useState } from "react";
 import { toast } from "sonner";
@@ -47,7 +47,7 @@ const HeroSection = () => {
         <div>
           <img
             className="object-contain w-full max-h-[500px] "
-            src={hero}
+            src={"https://res.cloudinary.com/dqrza04p1/image/upload/v1745345665/hero_pizza_2_ymbptp.png"}
           ></img>
         </div>
       </div>

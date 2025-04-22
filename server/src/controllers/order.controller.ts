@@ -14,12 +14,11 @@ type CheckOutSessionRequest = {
     price: number;
     quantity: number;
   }[];
-  deliveryDetails: {
-    name: string;
-    email: string;
-    address: string;
-    city: string;
-  };
+  userdeliveryAddress: string,
+  userdeliveryCity: string,
+  userdeliveryEmail: string,
+  userdeliveryName: string,
+ 
   resturantId: string;
 };
 type MenuItems = {
@@ -63,6 +62,8 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
       });
       return;
     }
+    
+    
 
     //Database Call
     //this will create order
@@ -71,10 +72,10 @@ export const createCheckOutSession: RequestHandler = async (req, res, next) => {
         userId: req.id,
         restaurantId: resturant._id as string, //converting to string
 
-        userdeliveryEmail: checkoutsessionRequest?.deliveryDetails?.email,
-        userdeliveryName: checkoutsessionRequest?.deliveryDetails?.name,
-        userdeliveryAddress: checkoutsessionRequest?.deliveryDetails?.address,
-        userdeliveryCity: checkoutsessionRequest?.deliveryDetails?.city,
+        userdeliveryEmail: checkoutsessionRequest?. userdeliveryEmail,
+        userdeliveryName: checkoutsessionRequest?.userdeliveryName,
+        userdeliveryAddress: checkoutsessionRequest?.userdeliveryAddress,
+        userdeliveryCity: checkoutsessionRequest?.userdeliveryCity,
         cartItems: checkoutsessionRequest?.cartItems,
         totalAmount: 0,
         status: "pending",
