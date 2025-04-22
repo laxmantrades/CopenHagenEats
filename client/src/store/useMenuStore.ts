@@ -29,8 +29,9 @@ export const useMenuStore = create<MenuState>()(
           });
           if (response.data.success) {
             toast.success(response.data.message);
-            set({ loading: false, menu: response.data.menu });
+           
           }
+          set({ loading: false, menu: response.data.menu });
           //update resturant
           useResturantStore.getState().addMenuToResturant(response.data.menu)
         } catch (error: any) {
