@@ -17,6 +17,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useResturantStore } from "@/store/useResturantStore";
 import { useOrderStore } from "@/store/useOrderStore";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const CheckOutConfirmPage = ({
   open,
@@ -54,12 +55,15 @@ const CheckOutConfirmPage = ({
           price: cartItem.price.toString(),
           quantity: cartItem.quantity.toString(),
         })),
-        deliveryDetails: input,
+        userdeliveryAddress: input.address,
+        userdeliveryCity:input.city,
+        userdeliveryEmail:input.email,
+        userdeliveryName:input.name,
         resturantId: resturant?._id as string,
       };
       await createCheckoutSession(checkoutData)
     } catch (error) {
-      console.log(error)
+      toast.error("Error checkoutdata")
     }
   };
   return (
