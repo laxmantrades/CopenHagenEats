@@ -64,7 +64,7 @@ const Profile = () => {
       await updateProfile(profilestate);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+    
       setIsLoading(false);
     }
   };
