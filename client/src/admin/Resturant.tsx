@@ -54,7 +54,7 @@ const Resturant = () => {
       setError(fieldError as Partial<ResturnatFormSchema>);
     }
     //add resturant api implementratui
-    console.log(input);
+    
     try {
       const formData = new FormData();
       formData.append("resturantName", input.resturantName);
