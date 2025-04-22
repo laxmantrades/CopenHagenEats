@@ -42,7 +42,7 @@ export const useResturantStore = create<ResturantState>()(
         try {
           set({ loading: true });
           const response = await axios.get(`${API_END_POINT}/`);
-          console.log(response);
+       
           
           
           if (response.data.success) {
@@ -146,7 +146,7 @@ export const useResturantStore = create<ResturantState>()(
             set({ resturantOrder: response.data.order });
           }
         } catch (error) {
-          console.log(error);
+          toast.error("Error fetching restauratnOrder")
         }
       },
       updateResturantOrder: async (orderId: string,status:string) => {
@@ -162,7 +162,7 @@ export const useResturantStore = create<ResturantState>()(
           );
           if (response.data.success) {
             const updateOrder = get().resturantOrder.map((order: Orders) => {
-              return order._id === orderId
+              return order.id === orderId
                 ? { ...order, status: response.data.status }
                 : order;
             });
