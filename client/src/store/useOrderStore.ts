@@ -20,7 +20,7 @@ export const useOrderStore=create<OrderState>()(persist((set)=>({
                 "Content-Type":"application/json"
             }})
            
-            window.location.href=response.data.session.url
+            window.location.href=response?.data?.session?.url
             
             
 
@@ -35,7 +35,7 @@ export const useOrderStore=create<OrderState>()(persist((set)=>({
         try {
             set({loading:true})
             const response=await axios.get(`${API_END_POINT}/`)
-            set({loading:false,orders:response.data.orders})
+            set({loading:false,orders:response?.data?.orders})
         } catch (error) {
             set({loading:false})
         }

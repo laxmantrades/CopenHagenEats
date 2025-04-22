@@ -28,12 +28,12 @@ export const useResturantStore = create<ResturantState>()(
               "Content-Type": "multipart/form-data",
             },
           });
-          if (response.data.success) {
+          if (response?.data?.success) {
             set({ loading: false });
-            toast.success(response.data.message);
+            toast.success(response?.data?.message);
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
           set({ loading: false });
         }
       },
@@ -45,12 +45,12 @@ export const useResturantStore = create<ResturantState>()(
        
           
           
-          if (response.data.success) {
+          if (response?.data?.success) {
             set({ loading: false });
-            set({ resturant: response.data.resturant });
+            set({ resturant: response?.data?.resturant });
           }
         } catch (error: any) {
-          if (error.response.status === 404) {
+          if (error?.response?.status === 404) {
             set({ resturant: null });
           }
           set({ loading: false });
@@ -64,12 +64,12 @@ export const useResturantStore = create<ResturantState>()(
               "Content-Type": "multipart/form-data",
             },
           });
-          if (response.data.success) {
+          if (response?.data?.success) {
             set({ loading: false });
-            toast.success(response.data.message);
+            toast.success(response?.data?.message);
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
           set({ loading: false });
         }
       },
@@ -93,8 +93,8 @@ export const useResturantStore = create<ResturantState>()(
               },
             }
           );
-          if (response.data.success) {
-            set({ loading: false, searchedResturant: response.data });
+          if (response?.data?.success) {
+            set({ loading: false, searchedResturant: response?.data });
           }
         } catch (error) {
           set({ loading: false });
@@ -109,8 +109,8 @@ export const useResturantStore = create<ResturantState>()(
       },
       updatedMenuResturant: (updatedMenu: MenuItem) => {
         set((state: any) => {
-          if (state.resturant) {
-            const updatedMenuList = state.resturant.menu.map((menu: any) =>
+          if (state?.resturant) {
+            const updatedMenuList = state?.resturant?.menu?.map((menu: any) =>
               menu._id === updatedMenu._id ? updatedMenu : menu
             );
             return { resturant: { ...state.resturant, menu: updatedMenuList } };
@@ -135,7 +135,7 @@ export const useResturantStore = create<ResturantState>()(
         try {
           const response = await axios.get(`${API_END_POINT}/${resturantId}`);
           if (response.data.success) {
-            set({ signleResturant: response.data.restaurant });
+            set({ signleResturant: response?.data?.restaurant });
           }
         } catch (error) {}
       },
@@ -143,7 +143,7 @@ export const useResturantStore = create<ResturantState>()(
         try {
           const response = await axios.get(`${API_END_POINT}/order`);
           if (response.data.success) {
-            set({ resturantOrder: response.data.order });
+            set({ resturantOrder: response?.data?.order });
           }
         } catch (error) {
           toast.error("Error fetching restauratnOrder")
@@ -161,9 +161,9 @@ export const useResturantStore = create<ResturantState>()(
             }
           );
           if (response.data.success) {
-            const updateOrder = get().resturantOrder.map((order: Orders) => {
+            const updateOrder = get().resturantOrder?.map((order: Orders) => {
               return order.id === orderId
-                ? { ...order, status: response.data.status }
+                ? { ...order, status: response?.data?.status }
                 : order;
             });
             set({ resturantOrder: updateOrder });

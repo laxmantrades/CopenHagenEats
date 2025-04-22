@@ -27,16 +27,16 @@ export const useMenuStore = create<MenuState>()(
               "Content-Type": "multipart/form-data",
             },
           });
-          if (response.data.success) {
-            toast.success(response.data.message);
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
            
           }
           set({ loading: false, menu: response.data.menu });
           //update resturant
-          useResturantStore.getState().addMenuToResturant(response.data.menu)
+          useResturantStore.getState().addMenuToResturant(response?.data?.menu)
         } catch (error: any) {
           set({ loading: false });
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       },
       editMenu: async (formData, id) => {
@@ -47,15 +47,15 @@ export const useMenuStore = create<MenuState>()(
               "Content-Type": "multipart/form-data",
             },
           });
-          if (response.data.success) {
-            toast.success(response.data.message);
-            set({ loading: false, menu: response.data.menu });
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
+            set({ loading: false, menu: response?.data?.menu });
           }
           //update resturant menus
-          useResturantStore.getState().updatedMenuResturant(response.data.menu)
+          useResturantStore.getState().updatedMenuResturant(response?.data?.menu)
         } catch (error: any) {
           set({ loading: false });
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       },
     }),

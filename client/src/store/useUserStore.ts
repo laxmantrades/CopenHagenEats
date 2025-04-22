@@ -50,8 +50,8 @@ export const useUserStore = create<UserState>()(
               "Content-Type": "application/json",
             },
           });
-          if (response.data.success) {
-            toast.success(response.data.message);
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
             set({
               loading: false,
               user: response.data.user,
@@ -59,7 +59,7 @@ export const useUserStore = create<UserState>()(
             });
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
           set({ loading: false });
         }
       },
@@ -132,7 +132,7 @@ export const useUserStore = create<UserState>()(
               "Content-Type": "application/json",
             },
           });
-          if (response.data.success) {
+          if (response?.data?.success) {
             set({
               user: response.data.user,
               isAuthenticated: true,
@@ -141,7 +141,7 @@ export const useUserStore = create<UserState>()(
           }
         } catch (error: any) {
           set({ isAuthenticated: false, isCheckingAuth: false, user: null });
-          toast.error(error.data.response.message);
+          toast.error(error?.data?.response?.message);
         }
       },
       forgotPassword: async (email: string) => {
@@ -156,12 +156,12 @@ export const useUserStore = create<UserState>()(
               },
             }
           );
-          if (response.data.success) {
-            toast.success(response.data.message);
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
             set({ loading: false });
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
           set({ loading: false });
         }
       },
@@ -178,12 +178,12 @@ export const useUserStore = create<UserState>()(
               },
             }
           );
-          if (response.data.success) {
-            toast.success(response.data.message);
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
             set({ loading: false });
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
           set({ loading: false });
         }
       },
@@ -199,12 +199,12 @@ export const useUserStore = create<UserState>()(
               },
             }
           );
-          if (response.data.success) {
-            toast.success(response.data.message);
+          if (response?.data?.success) {
+            toast.success(response?.data?.message);
             
           }
         } catch (error: any) {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
      
         }
       },
