@@ -32,8 +32,8 @@ const ResturantDetail=()=>{
                 <div className="my-5">
                     <h1 className="text-xl font-medium">{"Copenhagen Eats"}</h1>
                     <div className="flex gap-2 my-2">
-                          { signleResturant?.cuisine?.map((name:any)=>(
-                            <Badge key={name._id}>{name}</Badge>
+                          { signleResturant?.cuisine?.map((name:any,index)=>(
+                            <Badge key={index}>{name}</Badge>
                           )) }
                     </div>
                     <div className="flex flex-col md:flex-row gap-2 my-5">
