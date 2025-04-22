@@ -7,6 +7,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { Loader2, LockKeyhole, Mail } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 // type Login={
 //     email:string,
 //     password:string
@@ -41,7 +42,7 @@ const Login = () => {
       await login(input);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Error logging in")
     }
   };
 
