@@ -9,8 +9,8 @@ type MenuState = {
   createMenu: (formData: FormData) => Promise<void>;
   editMenu: (formData: FormData,id: string, ) => Promise<void>;
 };
-const API_END_POINT = window.location.hostname === "challenge.devconnectify.com"
-  ? "https://challenge.devconnectify.com/api/v1/menu"
+const API_END_POINT = window.location.hostname === "copenhageneats.netlify.app"
+  ? "https://copenhageneats.onrender.com/api/v1/menu"
   : "http://localhost:8080/api/v1/menu";
 
 axios.defaults.withCredentials = true;
