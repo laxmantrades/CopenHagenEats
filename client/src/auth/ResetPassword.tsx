@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/useUserStore"
 import { Loader2, LockKeyholeIcon } from "lucide-react"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { Link, useParams } from "react-router"
+import { toast } from "sonner"
 
 const ResetPassword=()=>{
     const [newpassword,setnewpassword]=useState<string>("")
@@ -14,7 +15,7 @@ const ResetPassword=()=>{
         try {
           await resetPassword(newpassword,token!)
         } catch (error) {
-          console.log(error);
+          toast.error("Error resetting password")
           
         }
     }
